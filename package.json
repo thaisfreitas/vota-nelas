@@ -1,0 +1,11 @@
+{
+  "name": "vota-nelas",
+  "private": true,
+  "description": "Testes de ponta a ponta do site Vota Nelas",
+  "scripts": {
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0"
+  }
+}

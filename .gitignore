@@ -6,3 +6,7 @@ data/raw/
 # arquivos baixados do TSE (ver README, "Atualizar as candidatas")
 dados-tse/
 __pycache__/
+
+# testes
+test-results/
+playwright-report/
