@@ -2,3 +2,7 @@
 node_modules/
 data/raw/
 *.zip
+
+# arquivos baixados do TSE (ver README, "Atualizar as candidatas")
+dados-tse/
+__pycache__/
