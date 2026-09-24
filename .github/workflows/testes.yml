@@ -1,0 +1,44 @@
+name: Testes
+
+on:
+  push:
+  pull_request:
+  # o deploy chama este workflow e só publica se tudo passar
+  workflow_call:
+
+jobs:
+  dados-e-conversor:
+    name: Dados e conversor do TSE
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Valida site/dados e testa scripts/tse_para_json.py
+        run: python -m unittest discover -s tests -v
+
+  site:
+    name: Site no navegador (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test
+      - name: Guarda o relatório se algum teste falhar
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-playwright
+          path: playwright-report/
+          retention-days: 7
