@@ -167,7 +167,7 @@ select{width:100%;min-height:52px;font:500 17px var(--body);padding:0 14px;borde
 .cand{text-align:left;border:0;cursor:pointer;background:var(--bg);border-radius:14px;padding:14px;box-shadow:inset 0 0 0 1.5px var(--line);color:var(--ink);font:inherit;display:grid;grid-template-columns:48px 1fr;gap:12px;align-items:center}
 .cand:hover{box-shadow:inset 0 0 0 2px var(--roxo)}
 .cand[aria-pressed="true"]{box-shadow:inset 0 0 0 3px var(--vinho);background:var(--soft)}
-.avatar{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;color:#fff;font-size:18px}
+.avatar{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;color:#fff;font-size:18px;background:var(--vinho)}
 .cand .nm{font-weight:700;font-size:16px;line-height:1.25}
 .cand .meta{font-size:13px;color:var(--muted)}
 .cand .num{font-family:var(--mono);font-size:20px;letter-spacing:.08em;color:var(--vinho)}
@@ -468,37 +468,52 @@ footer ul{margin:8px 0 0;padding-left:18px}
       {id:"pres",nome:"Presidenta",dig:2,vagas:1,faz:"Comanda o governo do país."}
     ];
   }
-  const COLORS=["#A3123F","#5B2A86","#B4533A","#2F6A6A","#7A3E8E","#8C2F5A"];
-  const PARTIDOS=["Partido A","Partido B","Partido C","Partido D","Partido E","Partido F"];
+  // ---------- candidatas (dados do TSE, gerados por scripts/tse_para_json.py) ----------
   // ordem sorteada a cada visita: ninguém aparece sempre primeiro
   const VISITA = String(Math.random());
-  const cache = {};
-  function exemplos(uf,cargo){
+  const DADOS = {}, cache = {};
+  function carregar(arq){
+    if(!DADOS[arq]) DADOS[arq] = fetch(`dados/${arq}.json`,{cache:"no-cache"})
+      .then(r=>{if(!r.ok) throw new Error(r.status); return r.json()})
+      .then(d=>DADOS[arq]=d)
+      .catch(e=>{delete DADOS[arq]; throw e});
+    return DADOS[arq];
+  }
+  const pronto = uf => DADOS[uf] && !DADOS[uf].then && DADOS.BR && !DADOS.BR.then;
+  function lista(uf,cargo){
     const key = cargo.grupo||cargo.id;
-    const ck=(key==="pres"?"BR":uf)+key;
+    const arq = key==="pres" ? "BR" : uf;
+    const ck = arq+key;
     if(cache[ck]) return cache[ck];
-    const r = rng(ck);
-    const n = {fed:42,est:48,sen:3,gov:2,pres:2}[key];
-    const used=new Set(), list=[];
-    for(let i=0;i<n;i++){
-      const p=Math.floor(r()*6);
-      const pn=String(10+p*7);
-      let num;
-      do{ num = key==="gov"||key==="pres" ? pn : pn + String(Math.floor(r()*Math.pow(10,cargo.dig-2))).padStart(cargo.dig-2,"0"); }while(used.has(num)&&key!=="gov"&&key!=="pres");
-      used.add(num);
-      list.push({id:key+i,nome:"Candidata exemplo "+(i+1),partido:PARTIDOS[p],num,cor:COLORS[p]});
-    }
-    const rv=rng(VISITA+ck);
-    const out=list.map(x=>[rv(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
-    return cache[ck]=out;
+    const d = DADOS[arq], rv = rng(VISITA+ck);
+    return cache[ck] = (d[key]||[])
+      .map(([nome,num,partido,sq])=>({id:sq,nome,num,partido,link:linkTSE(arq,sq)}))
+      .map(x=>[rv(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+  }
+  // página da candidata no DivulgaCandContas: #/candidato/{região}/{UF}/{eleição}/{SQ_CANDIDATO}/{ano}/{UE}
+  // 20322002026 é o código da Eleição Geral 2026 no DivulgaCand (diferente do CD_ELEICAO dos dados abertos)
+  const ELEICAO_DIVULGA = "20322002026";
+  const REGIAO = {AC:"NORTE",AM:"NORTE",AP:"NORTE",PA:"NORTE",RO:"NORTE",RR:"NORTE",TO:"NORTE",
+    AL:"NORDESTE",BA:"NORDESTE",CE:"NORDESTE",MA:"NORDESTE",PB:"NORDESTE",PE:"NORDESTE",PI:"NORDESTE",RN:"NORDESTE",SE:"NORDESTE",
+    DF:"CENTROOESTE",GO:"CENTROOESTE",MS:"CENTROOESTE",MT:"CENTROOESTE",ES:"SUDESTE",MG:"SUDESTE",RJ:"SUDESTE",SP:"SUDESTE",
+    PR:"SUL",RS:"SUL",SC:"SUL",BR:"BR"};
+  function linkTSE(ue,sq){
+    return `https://divulgacandcontas.tse.jus.br/divulga/#/candidato/${REGIAO[ue]}/${ue}/${ELEICAO_DIVULGA}/${sq}/2026/${ue}`;
+  }
+  const esc = s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const semAcento = s=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+  const PARTICULAS = new Set(["da","de","do","das","dos","e"]);
+  function iniciais(nome){
+    const p = nome.split(/\s+/).filter(w=>/^\p{L}/u.test(w) && !PARTICULAS.has(w.toLowerCase()));
+    return ((p[0]||"")[0]||"") + (p.length>1 ? p[p.length-1][0] : "");
   }
   const POR_VEZ = 6;
   let ui = {q:"",partido:"",page:0};
 
   // ---------- estado da urna ----------
   let state = {uf:null, step:0, picks:{}};
-  try{const s=JSON.parse(store.get("vn-urna")||"null"); if(s&&s.uf&&UF[s.uf]) state=s;}catch(e){}
-  const save=()=>store.set("vn-urna",JSON.stringify(state));
+  try{const s=JSON.parse(store.get("vn-urna-v2")||"null"); if(s&&s.uf&&UF[s.uf]) state=s;}catch(e){}
+  const save=()=>store.set("vn-urna-v2",JSON.stringify(state));
 
   const panel=$("#panel");
   function stepsBar(){
@@ -509,10 +524,22 @@ footer ul{margin:8px 0 0;padding-left:18px}
   function renderPanel(){
     if(state.step===0 || !state.uf) return renderUF();
     const cs=cargos(state.uf), c=cs[state.step-1];
-    let list=exemplos(state.uf,c);
+    if(!pronto(state.uf)){
+      panel.innerHTML = `${stepsBar()}<p class="step-label">Voto ${state.step} de 6 · ${UF[state.uf].nome}</p>
+        <h3 class="step-title">${c.nome}</h3><p class="step-help" id="loading">Carregando as candidatas…</p>`;
+      const uf=state.uf;
+      Promise.all([carregar(uf),carregar("BR")]).then(()=>{ if(state.uf===uf){ limparPicks(); renderPanel(); renderSlots(); } },()=>{
+        const l=$("#loading"); if(!l) return;
+        l.innerHTML='Não foi possível carregar as candidatas. Confira sua internet. <button class="linkbtn" type="button" id="retry">Tentar de novo</button>';
+        $("#retry").onclick=renderPanel;
+      });
+      return;
+    }
+    let list=lista(state.uf,c);
     const other = c.id==="sen2" ? state.picks.sen1?.id : c.id==="sen1" ? state.picks.sen2?.id : null;
     list = list.filter(x=>x.id!==other);
     const sel = state.picks[c.id]?.id;
+    const nenhuma = !list.length;
     const muitas = list.length > POR_VEZ;
     const partidos=[...new Set(list.map(x=>x.partido))].sort();
     panel.innerHTML = `${stepsBar()}
@@ -520,26 +547,26 @@ footer ul{margin:8px 0 0;padding-left:18px}
       <h3 class="step-title">${c.nome}</h3>
       <p class="step-help">${c.faz} ${c.vagas>1?`Seu estado elege <b>${c.vagas}</b> ${c.id.startsWith("sen")?"senadores(as) em 2026":"pessoas para este cargo"}.`:""}</p>
       ${muitas?`<div class="tools">
-        <div><label class="fld" for="q">Buscar por nome ou número</label><input id="q" type="search" inputmode="search" autocomplete="off" placeholder="Ex.: Maria ou ${list[0].num}" value="${ui.q}"></div>
-        <div><label class="fld" for="fp">Partido</label><select id="fp"><option value="">Todos</option>${partidos.map(p=>`<option ${p===ui.partido?"selected":""}>${p}</option>`).join("")}</select></div>
+        <div><label class="fld" for="q">Buscar por nome ou número</label><input id="q" type="search" inputmode="search" autocomplete="off" placeholder="Ex.: Maria ou ${list[0].num}" value="${esc(ui.q)}"></div>
+        <div><label class="fld" for="fp">Partido</label><select id="fp"><option value="">Todos</option>${partidos.map(p=>`<option ${p===ui.partido?"selected":""}>${esc(p)}</option>`).join("")}</select></div>
       </div>
       <p class="count-lbl" id="count-lbl"></p>`:""}
       <div class="cands" id="cands"></div>
       ${muitas?`<div id="more-wrap" style="margin-top:14px"><button class="btn btn-ghost" type="button" id="more">Mostrar outras ${POR_VEZ}</button></div>`:""}
       <div class="step-nav sticky-nav">
         <div class="mini">
-          <span>${sel?"Escolhida: <b>"+list.find(x=>x.id===sel).num+"</b>":"Toque em uma candidata"}</span>
+          <span>${sel?"Escolhida: <b>"+esc(state.picks[c.id].num)+"</b>":nenhuma?"Nenhuma candidata neste cargo":"Toque em uma candidata"}</span>
           <button class="linkbtn" type="button" id="see">Colinha ${Object.values(state.picks).filter(Boolean).length}/6</button>
         </div>
         <button class="btn btn-ghost" type="button" id="back">Voltar</button>
         <div class="nav-right">
-          <button class="linkbtn" type="button" id="skip">Pular este cargo</button>
-          <button class="btn btn-confirma" type="button" id="next" ${sel?"":"disabled"}>Confirma</button>
+          <button class="${nenhuma?"btn btn-primary":"linkbtn"}" type="button" id="skip">${nenhuma?"Próximo cargo":"Pular este cargo"}</button>
+          ${nenhuma?"":`<button class="btn btn-confirma" type="button" id="next" ${sel?"":"disabled"}>Confirma</button>`}
         </div>
       </div>`;
     function filtradas(){
-      const q=ui.q.trim().toLowerCase();
-      return list.filter(x=>(!ui.partido||x.partido===ui.partido)&&(!q||x.nome.toLowerCase().includes(q)||x.num.startsWith(q)));
+      const q=semAcento(ui.q.trim());
+      return list.filter(x=>(!ui.partido||x.partido===ui.partido)&&(!q||semAcento(x.nome).includes(q)||x.num.startsWith(q)));
     }
     function renderList(){
       const f=filtradas();
@@ -556,11 +583,12 @@ footer ul{margin:8px 0 0;padding-left:18px}
       $("#cands").innerHTML = show.length ? show.map(x=>`
         <div class="cand-wrap">
           <button class="cand" type="button" data-id="${x.id}" aria-pressed="${x.id===sel}">
-            <span class="avatar" style="background:${x.cor}" aria-hidden="true">${x.nome.split(" ").pop()}</span>
-            <span><span class="nm">${x.nome}</span><br><span class="meta">${x.partido}</span><br><span class="num">${x.num}</span></span>
+            <span class="avatar" aria-hidden="true">${esc(iniciais(x.nome))}</span>
+            <span><span class="nm">${esc(x.nome)}</span><br><span class="meta">${esc(x.partido)}</span><br><span class="num">${esc(x.num)}</span></span>
           </button>
-          <a class="know" href="https://divulgacandcontas.tse.jus.br/" target="_blank" rel="noopener">Conhecer no site do TSE ↗</a>
-        </div>`).join("") : `<p class="empty">Nenhuma candidata encontrada. Confira o nome ou o número, ou limpe os filtros.</p>`;
+          <a class="know" href="${esc(x.link)}" target="_blank" rel="noopener">Conhecer no site do TSE ↗</a>
+        </div>`).join("") : nenhuma ? `<p class="empty">${semVagaMsg(c,other)}</p>`
+        : `<p class="empty">Nenhuma candidata encontrada. Confira o nome ou o número, ou limpe os filtros.</p>`;
       panel.querySelectorAll(".cand").forEach(b=>b.onclick=()=>{
         const x=list.find(i=>i.id===b.dataset.id);
         if(state.picks[c.id]?.id===x.id) delete state.picks[c.id];
@@ -576,12 +604,26 @@ footer ul{margin:8px 0 0;padding-left:18px}
     }
     $("#back").onclick=()=>{ui={q:"",partido:"",page:0};state.step--;save();renderPanel()};
     $("#skip").onclick=()=>{delete state.picks[c.id];go()};
-    $("#next").onclick=go;
+    if(!nenhuma) $("#next").onclick=go;
     $("#see").onclick=verColinha;
     function go(){ ui={q:"",partido:"",page:0}; if(state.step<6){state.step++;save();renderPanel();panel.scrollIntoView({behavior:reduz?"auto":"smooth",block:"start"})} else {save();renderDone();if(estreito())verColinha()} renderSlots(); }
   }
 
   let lastMapFocus=false;
+  function semVagaMsg(c,other){
+    if(other) return "A única mulher candidata ao Senado no seu estado já está no seu 1º voto. Siga para o próximo cargo.";
+    const onde = c.id==="pres" ? "no Brasil" : `em ${UF[state.uf].nome}`;
+    return `Nenhuma mulher concorre a ${c.nome.replace(/ \(.*\)/,"").toLowerCase()} ${onde} nesta eleição. Siga para o próximo cargo.`;
+  }
+  // escolhas salvas que não existem mais nos dados do TSE (candidatura indeferida, por exemplo) saem da colinha
+  function limparPicks(){
+    let mudou=false;
+    for(const c of cargos(state.uf)){
+      const p=state.picks[c.id];
+      if(p && !lista(state.uf,c).some(x=>x.id===p.id && x.num===p.num)){ delete state.picks[c.id]; mudou=true; }
+    }
+    if(mudou) save();
+  }
   const reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const estreito = ()=>matchMedia("(max-width: 900px)").matches;
   function verColinha(){ document.querySelector(".urna").scrollIntoView({behavior:reduz?"auto":"smooth",block:"start"}); }
@@ -608,7 +650,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
         </div>
       </div>
       <div class="step-nav"><span></span><button class="btn btn-primary" type="button" id="start" ${state.uf?"":"disabled"}>Começar a escolher</button></div>`;
-    const setUF=u=>{lastMapFocus=true;state.uf=u||null;state.picks={};save();renderUF();renderSlots();};
+    const setUF=u=>{lastMapFocus=true;state.uf=u||null;state.picks={};save();renderUF();renderSlots();if(u){carregar(u).catch(()=>{});carregar("BR").catch(()=>{})}};
     panel.querySelectorAll(".brmap [data-uf]").forEach(t=>{
       t.addEventListener("click",()=>setUF(t.dataset.uf));
       t.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();setUF(t.dataset.uf)}});
@@ -645,8 +687,8 @@ footer ul{margin:8px 0 0;padding-left:18px}
     $("#slots").innerHTML = cs.map(c=>{
       const p=state.picks[c.id];
       const d = p ? p.num.split("") : Array(c.dig).fill("");
-      return `<div class="srow"><div class="c">${c.nome.replace(" (1º voto)"," 1").replace(" (2º voto)"," 2")}<small>${p?p.nome:"—"}</small></div>
-        <div class="digits" aria-label="${p?"número "+p.num:"sem escolha"}">${d.map(x=>`<i>${x}</i>`).join("")}</div></div>`;
+      return `<div class="srow"><div class="c">${c.nome.replace(" (1º voto)"," 1").replace(" (2º voto)"," 2")}<small>${p?esc(p.nome):"—"}</small></div>
+        <div class="digits" aria-label="${p?"número "+esc(p.num):"sem escolha"}">${d.map(x=>`<i>${esc(x)}</i>`).join("")}</div></div>`;
     }).join("");
   }
   // Endereço do site: troque por https://votanelas.com.br quando o domínio estiver no ar
@@ -697,6 +739,8 @@ footer ul{margin:8px 0 0;padding-left:18px}
   };
 
   renderPanel(); renderSlots();
+  // escolhas salvas de outra visita: confere com os dados atuais antes de a colinha poder ser enviada
+  if(state.uf && state.step===0) Promise.all([carregar(state.uf),carregar("BR")]).then(()=>{limparPicks();renderSlots()},()=>{});
 
   // ---------- compromisso (db) ----------
   const sel=$("#pledge-uf");
