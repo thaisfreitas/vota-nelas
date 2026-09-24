@@ -29,6 +29,8 @@ jobs:
       - id: publica
         uses: cloudflare/wrangler-action@v3
         with:
+          # a versão padrão da action (3.90) não lê wrangler.jsonc
+          wranglerVersion: "4.139.0"
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
