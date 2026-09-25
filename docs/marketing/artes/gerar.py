@@ -76,6 +76,19 @@ def colinha(linhas):
     return f'<div class="colinha"><div style="font-weight:700;font-size:22px;margin-bottom:14px;letter-spacing:.08em">MINHA COLINHA</div><div class="tela">{corpo}</div></div>'
 
 
+CONHECA = [
+    ("Como votou na Câmara", "Para quem já foi deputada: PEC 6x1, igualdade salarial, misoginia, agrotóxicos e licenciamento ambiental."),
+    ("Perfil, bens e contas", "Link oficial do TSE com bens declarados, certidões criminais e quem financia a campanha."),
+    ("Como pesquisar", "Um guia com os caminhos oficiais para conhecer qualquer candidata."),
+]
+
+
+def lista_conheca(tam_titulo, tam_texto, gap):
+    return f'<div style="display:grid;gap:{gap}px">' + "".join(
+        f'<div class="passo"><div class="n" style="font-size:44px">✓</div><div><h1 style="font-size:{tam_titulo}px">{t}</h1>'
+        f'<p class="m" style="font-size:{tam_texto}px;margin-top:8px">{d}</p></div></div>' for t, d in CONHECA) + "</div>"
+
+
 LINHAS_URNA = [("Deputada federal", 4), ("Deputada estadual", 5), ("Senadora 1", 3), ("Senadora 2", 3),
                ("Governadora", 2), ("Presidenta", 2)]
 
@@ -107,6 +120,12 @@ ARTES = {
 
     "feed_02_carrossel-3": (FEED, "", f"""{LOGO}
       <div class="meio">
+        <h1 style="font-size:78px;margin-bottom:50px">Conheça cada candidata <span class="v">antes de escolher.</span></h1>
+        {lista_conheca(50, 30, 40)}
+      </div>{RODAPE}"""),
+
+    "feed_02_carrossel-4": (FEED, "", f"""{LOGO}
+      <div class="meio">
         <h1 style="font-size:72px;margin-bottom:40px">Todas as candidatas aptas, de <span class="v">todos os partidos.</span></h1>
         <p style="font-size:36px;font-weight:600">Dados oficiais do TSE, em ordem sorteada a cada visita e no mesmo formato.</p>
         <p class="m" style="font-size:32px;margin-top:30px">Sem recomendar ninguém: quem escolhe é você.</p>
@@ -127,6 +146,14 @@ ARTES = {
         <h1 class="v" style="font-size:84px;margin:10px 0 50px">A colinha em papel pode.</h1>
         {colinha(LINHAS_URNA)}
         <p class="m" style="font-size:30px;margin-top:34px">Monte a sua, anote ou imprima e leve no dia 4.</p>
+      </div>{RODAPE}"""),
+
+    "feed_05_conheca-a-candidata": (FEED, "escuro", f"""{LOGO}
+      <div class="meio">
+        <p class="v" style="font-size:32px;font-weight:700;letter-spacing:.12em">ANTES DE VOTAR</p>
+        <h1 style="font-size:92px;margin:16px 0 50px">Conheça a candidata.</h1>
+        {lista_conheca(50, 30, 40)}
+        <p class="m" style="font-size:28px;margin-top:44px">Dados oficiais do TSE e da Câmara. O site não recomenda ninguém: quem escolhe é você.</p>
       </div>{RODAPE}"""),
 
     # ---------- stories do Instagram e status do WhatsApp (1080x1920) ----------
@@ -160,6 +187,15 @@ ARTES = {
       {CTA_STORY}
       {RODAPE_STORY}"""),
 
+    "story_04_conheca-a-candidata": (STORY, "escuro", f"""{LOGO}
+      <div class="meio">
+        <p class="v" style="font-size:40px;font-weight:700;letter-spacing:.12em">ANTES DE VOTAR</p>
+        <h1 style="font-size:120px;margin:20px 0 60px">Conheça a candidata.</h1>
+        {lista_conheca(58, 36, 48)}
+      </div>
+      {CTA_STORY}
+      {RODAPE_STORY}"""),
+
     # ---------- X (1600x900) ----------
     "x_01_52-e-17": (X, "", f"""{LOGO}
       <div class="meio" style="flex-direction:row;align-items:center;gap:80px">
@@ -173,13 +209,23 @@ ARTES = {
         <h1 style="font-size:100px">Na urna, 6 números.<br><span class="v">A maioria de mulheres.</span></h1>
         <p style="font-size:40px;font-weight:600;margin-top:34px">Escolha seu estado, uma mulher nos cargos que quiser e receba sua colinha.</p>
       </div>{RODAPE}"""),
+
+    "x_03_conheca-a-candidata": (X, "", f"""{LOGO}
+      <div class="meio" style="flex-direction:row;align-items:center;gap:70px">
+        <h1 style="font-size:96px;flex:0 0 560px">Conheça a candidata <span class="v">antes de votar.</span></h1>
+        {lista_conheca(44, 26, 26)}
+      </div>{RODAPE}"""),
 }
 
 # contagem regressiva para os stories: 26/9 (faltam 8 dias) até 3/10 (amanhã)
 for faltam in range(8, 0, -1):
     titulo = "Amanhã é dia de votar." if faltam == 1 else f'Faltam <span class="v">{faltam} dias</span>.'
-    apoio = ("Sua colinha está pronta? Anote os números ou tire um print hoje."
-             if faltam == 1 else "Já montou sua urna com mais mulheres?")
+    if faltam == 1:
+        apoio = "Sua colinha está pronta? Anote os números ou tire um print hoje."
+    elif faltam % 2:
+        apoio = "Antes de escolher, conheça a candidata: votos na Câmara, bens e contas."
+    else:
+        apoio = "Já montou sua urna com mais mulheres?"
     ARTES[f"story_contagem_{faltam:02d}"] = (STORY, "escuro" if faltam == 1 else "", f"""{LOGO}
       <div class="meio">
         <p class="m" style="font-size:44px;font-weight:700">Eleições · 4 de outubro</p>

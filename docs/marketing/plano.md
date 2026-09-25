@@ -43,12 +43,12 @@ Hashtags: `#VotaNelas` `#EuVotoNelas` `#MaisMulheresNaPolítica` `#Eleições202
 
 | Dia | Tema | Feed Instagram / X | Stories e status do WhatsApp | WhatsApp (mensagem) |
 |---|---|---|---|---|
-| **Sex 25/09** | Lançamento | Carrossel "Como funciona" (`feed_02_carrossel-1` a `-3`) · X: fio de lançamento | `story_01_convite` | Onda 1: grupos de amigas e família |
+| **Sex 25/09** | Lançamento | Carrossel "Como funciona" (`feed_02_carrossel-1` a `-4`) · X: fio de lançamento | `story_01_convite` | Onda 1: grupos de amigas e família |
 | **Sáb 26/09** | A conta não fecha | `feed_01_52-e-17` · X: `x_01_52-e-17` | `story_contagem_08` | — |
 | **Dom 27/09** | A colinha | `feed_04_colinha` · X: texto da colinha | `story_contagem_07` | Repostar colinhas de amigas |
 | **Seg 28/09** | Voto em dobro | `feed_03_voto-em-dobro` · X: fio do voto em dobro | `story_contagem_06` + `story_03_voto-em-dobro` | Início das mensagens para parceiras |
-| **Ter 29/09** | Manifesto | Repost do carrossel · X: `x_02_como-funciona` | `story_contagem_05` + `story_02_manifesto` | — |
-| **Qua 30/09** | Quem já assinou | Print do contador do manifesto nos stories · X: número de assinaturas | `story_contagem_04` | Grupos de trabalho, faculdade, bairro |
+| **Ter 29/09** | Conheça a candidata | `feed_05_conheca-a-candidata` · X: `x_03_conheca-a-candidata` | `story_contagem_05` + `story_04_conheca-a-candidata` | — |
+| **Qua 30/09** | Manifesto | Print do contador do manifesto nos stories · X: `x_02_como-funciona` | `story_contagem_04` + `story_02_manifesto` | Grupos de trabalho, faculdade, bairro |
 | **Qui 01/10** | Reforço dos números | Repost de `feed_01_52-e-17` · X: dado do Senado | `story_contagem_03` | — |
 | **Sex 02/10** | Passe para 3 amigas | Post pedindo para mandar a colinha · X: pedido de RT | `story_contagem_02` | Onda 2: todos os grupos |
 | **Sáb 03/10** | Véspera | Repost de `feed_04_colinha` · X: lembrete da colinha | `story_contagem_01` (escuro) | Lembrete final: "leve a colinha amanhã" |
@@ -84,6 +84,13 @@ Hashtags: `#VotaNelas` `#EuVotoNelas` `#MaisMulheresNaPolítica` `#Eleições202
 >
 > Para eleger, cada voto continua contando uma vez. Mas cada voto numa deputada federal faz o partido receber mais dinheiro para investir em mulheres na próxima eleição.
 
+**29/09, conheça a candidata** (`feed_05_conheca-a-candidata`)
+> Antes de votar, conheça a candidata.
+>
+> No Vota Nelas, cada candidata tem o link oficial do TSE com bens declarados, certidões criminais e quem financia a campanha. Para quem já foi deputada, dá para ver como ela votou na Câmara em temas como a escala 6x1, a igualdade salarial e o licenciamento ambiental. E tem um guia com os caminhos oficiais para pesquisar qualquer candidata.
+>
+> Dados oficiais do TSE e da Câmara. O site não recomenda ninguém: quem escolhe é você. Link na bio.
+
 **02/10, passe para 3 amigas**
 > Faltam 2 dias. Já montou sua urna? Agora manda a colinha para 3 amigas: cada colinha compartilhada pode virar mais votos em mulheres.
 
@@ -100,6 +107,9 @@ Hashtags: `#VotaNelas` `#EuVotoNelas` `#MaisMulheresNaPolítica` `#Eleições202
 
 **28/09, voto em dobro**
 > Voto em deputada federal conta em dobro na divisão do dinheiro dos partidos (EC 111/2021). Para eleger, conta uma vez; para o fundo, conta duas. Monte sua urna com mulheres: votanelas.com.br
+
+**29/09, conheça a candidata**
+> Antes de votar, conheça a candidata: no votanelas.com.br tem o link oficial do TSE (bens, certidões, contas) e, para quem já foi deputada, como ela votou na Câmara. Dados oficiais; quem escolhe é você. #VotaNelas
 
 **01/10, Senado**
 > No Senado, são 15 senadoras em 81 cadeiras (18,5%). Neste ano cada eleitor vota em 2 nomes para o Senado. votanelas.com.br
@@ -156,12 +166,15 @@ Pedir para movimentos, coletivos e perfis de mulheres compartilharem. O argument
 | Arquivo | Formato | Uso |
 |---|---|---|
 | `feed_01_52-e-17.png` | 1080x1350 | Feed: 52,8% e 17,2% |
-| `feed_02_carrossel-1/2/3.png` | 1080x1350 | Feed: carrossel "Como funciona" |
+| `feed_02_carrossel-1/2/3/4.png` | 1080x1350 | Feed: carrossel "Como funciona" (o 3 é "Conheça cada candidata") |
 | `feed_03_voto-em-dobro.png` | 1080x1350 | Feed: voto em dobro (escuro) |
 | `feed_04_colinha.png` | 1080x1350 | Feed: colinha em papel |
+| `feed_05_conheca-a-candidata.png` | 1080x1350 | Feed: conheça a candidata (escuro) |
 | `story_01_convite.png` | 1080x1920 | Stories e status: convite |
 | `story_02_manifesto.png` | 1080x1920 | Stories e status: manifesto (escuro) |
 | `story_03_voto-em-dobro.png` | 1080x1920 | Stories e status: voto em dobro |
-| `story_contagem_08.png` a `_01.png` | 1080x1920 | Contagem regressiva, 26/09 a 03/10 |
+| `story_04_conheca-a-candidata.png` | 1080x1920 | Stories e status: conheça a candidata (escuro) |
+| `story_contagem_08.png` a `_01.png` | 1080x1920 | Contagem regressiva, 26/09 a 03/10 (dias ímpares lembram de conhecer a candidata) |
 | `x_01_52-e-17.png` | 1600x900 | X: números |
 | `x_02_como-funciona.png` | 1600x900 | X: como funciona (escuro) |
+| `x_03_conheca-a-candidata.png` | 1600x900 | X: conheça a candidata |
