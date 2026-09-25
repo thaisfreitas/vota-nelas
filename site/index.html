@@ -91,8 +91,6 @@ p{margin:0}
 .btn-ghost:hover{box-shadow:inset 0 0 0 2px var(--ink)}
 .btn-confirma{background:var(--confirma);color:var(--confirma-ink);text-transform:uppercase;letter-spacing:.06em}
 .btn-confirma:hover{filter:brightness(1.08)}
-.btn-branco{background:#FFFFFF;color:#1B1B1B;box-shadow:inset 0 0 0 2px var(--line);text-transform:uppercase;letter-spacing:.06em}
-.btn-branco[aria-pressed="true"]{box-shadow:inset 0 0 0 3px var(--vinho)}
 .alt-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 
@@ -197,7 +195,6 @@ input[type="search"]{width:100%;min-height:52px;font:500 17px var(--body);paddin
 .srow .c{font-size:14px;line-height:1.2}
 .srow .c small{display:block;font-size:12px;opacity:.75}
 .digits{display:flex;gap:3px}
-.digits.branco span{border:1.5px solid var(--urna-ink);border-radius:3px;padding:3px 8px;font-family:var(--mono);font-size:16px;letter-spacing:.08em}
 .digits i{width:20px;height:28px;border:1.5px solid var(--urna-ink);border-radius:3px;display:grid;place-items:center;font-style:normal;font-size:19px}
 .urna .acts{display:grid;gap:8px;margin-top:14px}
 .urna .btn{min-height:46px;font-size:15px}
@@ -545,11 +542,9 @@ footer ul{margin:8px 0 0;padding-left:18px}
       return;
     }
     let list=lista(state.uf,c);
-    const outroSen = c.id==="sen2" ? state.picks.sen1 : c.id==="sen1" ? state.picks.sen2 : null;
-    const other = outroSen && !outroSen.branco ? outroSen.id : null;
+    const other = c.id==="sen2" ? state.picks.sen1?.id : c.id==="sen1" ? state.picks.sen2?.id : null;
     list = list.filter(x=>x.id!==other);
     const sel = state.picks[c.id]?.id;
-    const branco = !!state.picks[c.id]?.branco;
     const nenhuma = !list.length;
     const muitas = list.length > POR_VEZ;
     const partidos=[...new Set(list.map(x=>x.partido))].sort();
@@ -565,12 +560,11 @@ footer ul{margin:8px 0 0;padding-left:18px}
       <div class="cands" id="cands"></div>
       ${muitas?`<div id="more-wrap" style="margin-top:14px"><button class="btn btn-ghost" type="button" id="more">Mostrar outras ${POR_VEZ}</button></div>`:""}
       <div class="alt-row">
-        <button class="btn btn-branco" type="button" id="branco" aria-pressed="${branco}">Votar em branco</button>
         <button class="btn btn-ghost" type="button" id="skip">${nenhuma?"Próximo cargo":"Pular este cargo"}</button>
       </div>
       <div class="step-nav sticky-nav">
         <div class="mini">
-          <span>${branco?"Escolhido: <b>BRANCO</b>":sel?"Escolhida: <b>"+esc(state.picks[c.id].num)+"</b>":nenhuma?"Nenhuma candidata neste cargo":"Toque em uma candidata"}</span>
+          <span>${sel?"Escolhida: <b>"+esc(state.picks[c.id].num)+"</b>":nenhuma?"Nenhuma candidata neste cargo":"Toque em uma candidata"}</span>
           <button class="linkbtn" type="button" id="see">Colinha ${Object.values(state.picks).filter(Boolean).length}/6</button>
         </div>
         <button class="btn btn-ghost" type="button" id="back">Voltar</button>
@@ -618,12 +612,6 @@ footer ul{margin:8px 0 0;padding-left:18px}
     }
     $("#back").onclick=()=>{ui={q:"",partido:"",page:0};state.step--;save();renderPanel()};
     $("#skip").onclick=()=>{delete state.picks[c.id];go()};
-    // como na urna: aperta BRANCO e depois CONFIRMA
-    $("#branco").onclick=()=>{
-      if(branco) delete state.picks[c.id];
-      else state.picks[c.id]={id:"branco",branco:true,nome:"Voto em branco",num:""};
-      save(); renderPanel(); renderSlots();
-    };
     $("#next").onclick=go;
     $("#see").onclick=verColinha;
     function go(){ ui={q:"",partido:"",page:0}; if(state.step<6){state.step++;save();renderPanel();panel.scrollIntoView({behavior:reduz?"auto":"smooth",block:"start"})} else {save();renderDone();if(estreito())verColinha()} renderSlots(); }
@@ -640,7 +628,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
     let mudou=false;
     for(const c of cargos(state.uf)){
       const p=state.picks[c.id];
-      if(p && !p.branco && !lista(state.uf,c).some(x=>x.id===p.id && x.num===p.num)){ delete state.picks[c.id]; mudou=true; }
+      if(p && !lista(state.uf,c).some(x=>x.id===p.id && x.num===p.num)){ delete state.picks[c.id]; mudou=true; }
     }
     if(mudou) save();
   }
@@ -688,15 +676,13 @@ footer ul{margin:8px 0 0;padding-left:18px}
     }
   }
 
-  const mulheresEscolhidas = ()=>Object.values(state.picks).filter(p=>p&&!p.branco).length;
-  const brancosEscolhidos = ()=>Object.values(state.picks).filter(p=>p&&p.branco).length;
+  const mulheresEscolhidas = ()=>Object.values(state.picks).filter(Boolean).length;
   function renderDone(){
-    const n=mulheresEscolhidas(), b=brancosEscolhidos();
+    const n=mulheresEscolhidas();
     panel.innerHTML = `${stepsBar()}
       <p class="step-label">Pronto</p>
       <h3 class="step-title">Sua urna tem ${n} ${n===1?"mulher":"mulheres"}.</h3>
       <p class="step-help">Anote os números num papel ou tire um print da colinha. Depois, envie para 3 amigas: cada colinha compartilhada pode virar mais votos.</p>
-      ${b?`<p class="step-help">Nos cargos marcados como BRANCO, aperte a tecla <b>BRANCO</b> na urna e depois <b>CONFIRMA</b>.</p>`:""}
       <div class="step-nav"><button class="btn btn-ghost" type="button" id="edit">Revisar escolhas</button><button class="btn btn-primary" type="button" id="goshare">Enviar para 3 amigas</button></div>`;
     $("#edit").onclick=()=>{state.step=1;save();renderPanel()};
     $("#goshare").onclick=share;
@@ -711,11 +697,8 @@ footer ul{margin:8px 0 0;padding-left:18px}
     $("#slots").innerHTML = cs.map(c=>{
       const p=state.picks[c.id];
       const d = p ? p.num.split("") : Array(c.dig).fill("");
-      const digitos = p&&p.branco
-        ? `<div class="digits branco" aria-label="voto em branco"><span>BRANCO</span></div>`
-        : `<div class="digits" aria-label="${p?"número "+esc(p.num):"sem escolha"}">${d.map(x=>`<i>${esc(x)}</i>`).join("")}</div>`;
       return `<div class="srow"><div class="c">${c.nome.replace(" (1º voto)"," 1").replace(" (2º voto)"," 2")}<small>${p?esc(p.nome):"—"}</small></div>
-        ${digitos}</div>`;
+        <div class="digits" aria-label="${p?"número "+esc(p.num):"sem escolha"}">${d.map(x=>`<i>${esc(x)}</i>`).join("")}</div></div>`;
     }).join("");
   }
   // link da colinha: o próprio endereço onde o site está aberto (workers.dev hoje, o domínio próprio depois)
@@ -724,8 +707,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
   function colinhaTexto(){
     const cs=cargos(state.uf||"SP");
     const escolhidas=cs.filter(c=>state.picks[c.id]);
-    // só brancos não viram colinha: sem mulheres, a mensagem é um convite
-    if(!mulheresEscolhidas()){
+    if(!escolhidas.length){
       return `*Só 18% da Câmara dos Deputados é de mulheres.*\n\n`+
         `Em 4 de outubro dá para mudar isso. Monte sua urna só com mulheres em 3 minutos e leve a colinha no dia da votação:\n`+
         `${SITE_URL}`;
@@ -734,7 +716,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
     const linhas=escolhidas.map(c=>{
       const p=state.picks[c.id];
       const rot = c.id==="est"&&state.uf==="DF" ? "Deputada distrital" : ROTULO[c.id];
-      return p.branco ? `${rot}: *BRANCO*` : `${rot}: *${p.num}* · ${p.nome}`;
+      return `${rot}: *${p.num}* · ${p.nome}`;
     });
     return `*Minha colinha para 4/10* (${state.uf})\n`+
       `Minha urna tem ${n} ${n===1?"mulher":"mulheres"}:\n\n`+

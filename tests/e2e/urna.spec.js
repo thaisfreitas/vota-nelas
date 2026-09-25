@@ -25,8 +25,6 @@ async function escolherEstado(page, uf) {
   await page.locator("#start").click();
 }
 
-const ORDEM = ["Deputada federal", "Deputada estadual", "Senadora (1º voto)", "Senadora (2º voto)", "Governadora", "Presidenta"];
-
 async function pular(page) {
   const atual = (await page.locator(".step-title").textContent())?.trim();
   await page.locator("#skip").click();
@@ -147,55 +145,6 @@ test("assinar o manifesto troca o botão pela confirmação", async ({ page }) =
   await expect(page.locator("#pledge-done")).toBeVisible();
 });
 
-test("voto em branco aparece na colinha e cargo pulado fica de fora", async ({ page, context }) => {
-  await escolherEstado(page, "SP");
-  const fed = await escolherPrimeira(page);
-  // estadual: pula
-  await pular(page);
-  // senado 1: branco, que não tira ninguém da lista do 2º voto
-  await expect(page.locator(".step-title")).toHaveText("Senadora (1º voto)");
-  const senadoras = await page.locator(".cand").count();
-  await page.locator("#branco").click();
-  await expect(page.locator("#branco")).toHaveAttribute("aria-pressed", "true");
-  await page.locator("#next").click();
-  await expect(page.locator(".step-title")).toHaveText("Senadora (2º voto)");
-  await expect(page.locator(".cand")).toHaveCount(senadoras);
-  await pular(page);
-  await pular(page);
-  // presidenta: branco
-  await expect(page.locator(".step-title")).toHaveText("Presidenta");
-  await page.locator("#branco").click();
-  await page.locator("#next").click();
-
-  await expect(page.locator(".step-title")).toHaveText("Sua urna tem 1 mulher.");
-  await expect(page.locator(".step-help", { hasText: "tecla BRANCO" })).toBeVisible();
-  await expect(page.locator('#slots .digits[aria-label="voto em branco"]')).toHaveCount(2);
-
-  const [whatsapp] = await Promise.all([context.waitForEvent("page"), page.locator("#share").click()]);
-  const texto = new URL(whatsapp.url()).searchParams.get("text") || "";
-  expect(texto).toContain(`*${fed}*`);
-  expect(texto).toContain("Presidenta: *BRANCO*");
-  expect(texto).toContain("Senadora (1º voto): *BRANCO*");
-  expect(texto).not.toContain("Deputada estadual");
-  expect(texto).toContain("Minha urna tem 1 mulher");
-});
-
-test("só votos em branco viram convite, não colinha", async ({ page, context }) => {
-  await escolherEstado(page, "AC");
-  for (const cargo of ORDEM) {
-    await expect(page.locator(".step-title")).toHaveText(cargo);
-    await page.locator("#branco").click();
-    await expect(page.locator("#branco")).toHaveAttribute("aria-pressed", "true");
-    await page.locator("#next").click();
-  }
-  await expect(page.locator(".step-title")).toHaveText("Sua urna tem 0 mulheres.");
-  await expect(page.locator("#share")).toHaveText("Convidar amigas pelo WhatsApp");
-  const [whatsapp] = await Promise.all([context.waitForEvent("page"), page.locator("#share").click()]);
-  const texto = new URL(whatsapp.url()).searchParams.get("text") || "";
-  expect(texto).toContain("Monte sua urna só com mulheres");
-  expect(texto).not.toContain("BRANCO");
-});
-
 test("limpar escolhas pede confirmação e recomeça do mapa", async ({ page }) => {
   await escolherEstado(page, "SP");
   await expect(page.locator("#limpar")).toBeHidden();
@@ -221,4 +170,17 @@ test("limpar escolhas pede confirmação e recomeça do mapa", async ({ page }) 
 test("não mostra mais a faixa de protótipo", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByText("Protótipo")).toHaveCount(0);
+});
+
+test("cargo pulado fica fora da colinha e da mensagem", async ({ page, context }) => {
+  await escolherEstado(page, "SP");
+  const fed = await escolherPrimeira(page);
+  for (let i = 0; i < 5; i++) await pular(page);
+  await expect(page.locator(".step-title")).toHaveText("Sua urna tem 1 mulher.");
+  await expect(page.locator('#slots .digits[aria-label="sem escolha"]')).toHaveCount(5);
+  const [whatsapp] = await Promise.all([context.waitForEvent("page"), page.locator("#share").click()]);
+  const texto = new URL(whatsapp.url()).searchParams.get("text") || "";
+  expect(texto).toContain(`Deputada federal: *${fed}*`);
+  expect(texto).not.toContain("Deputada estadual");
+  expect(texto).not.toContain("Presidenta");
 });
