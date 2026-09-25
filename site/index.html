@@ -6,15 +6,15 @@
 <title>Vota Nelas: monte sua urna só com mulheres</title>
 <meta name="description" content="Mulheres são 52% do eleitorado e só 17,7% da Câmara. Monte sua urna com mulheres em 3 minutos e envie a colinha para 3 amigas. Eleições de 4 de outubro de 2026.">
 <meta name="theme-color" content="#A3123F">
-<link rel="canonical" href="https://vota-nelas.thaisfreitas31.workers.dev/">
+<link rel="canonical" href="https://votanelas.com.br/">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="Vota Nelas">
 <meta property="og:title" content="Vota Nelas: monte sua urna só com mulheres">
 <meta property="og:description" content="Na urna você digita 6 números. Escolha uma mulher para cada cargo e receba sua colinha em 3 minutos.">
-<meta property="og:url" content="https://vota-nelas.thaisfreitas31.workers.dev/">
-<meta property="og:image" content="https://vota-nelas.thaisfreitas31.workers.dev/og.png">
+<meta property="og:url" content="https://votanelas.com.br/">
+<meta property="og:image" content="https://votanelas.com.br/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Vota Nelas: mulheres são 52% do eleitorado e 17,7% da Câmara.">
@@ -701,8 +701,8 @@ footer ul{margin:8px 0 0;padding-left:18px}
         <div class="digits" aria-label="${p?"número "+esc(p.num):"sem escolha"}">${d.map(x=>`<i>${esc(x)}</i>`).join("")}</div></div>`;
     }).join("");
   }
-  // link da colinha: o próprio endereço onde o site está aberto (workers.dev hoje, o domínio próprio depois)
-  const SITE_URL = /^https?:$/.test(location.protocol) ? location.origin + "/" : "https://vota-nelas.thaisfreitas31.workers.dev/";
+  // link da colinha: o próprio endereço onde o site está aberto (votanelas.com.br ou o workers.dev)
+  const SITE_URL = /^https?:$/.test(location.protocol) ? location.origin + "/" : "https://votanelas.com.br/";
   const ROTULO = {fed:"Deputada federal",est:"Deputada estadual",sen1:"Senadora (1º voto)",sen2:"Senadora (2º voto)",gov:"Governadora",pres:"Presidenta"};
   function colinhaTexto(){
     const cs=cargos(state.uf||"SP");
