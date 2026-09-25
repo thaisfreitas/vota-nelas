@@ -25,12 +25,23 @@ async function escolherEstado(page, uf) {
   await page.locator("#start").click();
 }
 
+const ORDEM = ["Deputada federal", "Deputada estadual", "Senadora (1º voto)", "Senadora (2º voto)", "Governadora", "Presidenta"];
+
+async function pular(page) {
+  const atual = (await page.locator(".step-title").textContent())?.trim();
+  await page.locator("#skip").click();
+  await expect(page.locator(".step-title")).not.toHaveText(atual || "");
+}
+
 async function escolherPrimeira(page) {
   const card = page.locator(".cand").first();
   await expect(card).toBeVisible();
   const numero = (await card.locator(".num").textContent())?.trim();
+  const atual = (await page.locator(".step-title").textContent())?.trim();
   await card.click();
+  await expect(page.locator("#next")).toBeEnabled();
   await page.locator("#next").click();
+  await expect(page.locator(".step-title")).not.toHaveText(atual || "");
   return numero;
 }
 
@@ -97,7 +108,7 @@ test("cada candidata tem link para a página dela no TSE", async ({ page }) => {
 test("cargo sem mulheres mostra aviso e deixa seguir", async ({ page }) => {
   // no Espírito Santo, nenhuma mulher concorre a governadora em 2026
   await escolherEstado(page, "ES");
-  for (let i = 0; i < 4; i++) await page.locator("#skip").click();
+  for (let i = 0; i < 4; i++) await pular(page);
   await expect(page.locator(".step-title")).toHaveText("Governadora");
   await expect(page.locator(".empty")).toHaveText(/Nenhuma mulher concorre a governadora no Espírito Santo/);
   await expect(page.locator("#next")).toBeDisabled();
@@ -140,7 +151,7 @@ test("voto em branco aparece na colinha e cargo pulado fica de fora", async ({ p
   await escolherEstado(page, "SP");
   const fed = await escolherPrimeira(page);
   // estadual: pula
-  await page.locator("#skip").click();
+  await pular(page);
   // senado 1: branco, que não tira ninguém da lista do 2º voto
   await expect(page.locator(".step-title")).toHaveText("Senadora (1º voto)");
   const senadoras = await page.locator(".cand").count();
@@ -149,8 +160,8 @@ test("voto em branco aparece na colinha e cargo pulado fica de fora", async ({ p
   await page.locator("#next").click();
   await expect(page.locator(".step-title")).toHaveText("Senadora (2º voto)");
   await expect(page.locator(".cand")).toHaveCount(senadoras);
-  await page.locator("#skip").click();
-  await page.locator("#skip").click();
+  await pular(page);
+  await pular(page);
   // presidenta: branco
   await expect(page.locator(".step-title")).toHaveText("Presidenta");
   await page.locator("#branco").click();
@@ -171,8 +182,10 @@ test("voto em branco aparece na colinha e cargo pulado fica de fora", async ({ p
 
 test("só votos em branco viram convite, não colinha", async ({ page, context }) => {
   await escolherEstado(page, "AC");
-  for (let i = 0; i < 6; i++) {
+  for (const cargo of ORDEM) {
+    await expect(page.locator(".step-title")).toHaveText(cargo);
     await page.locator("#branco").click();
+    await expect(page.locator("#branco")).toHaveAttribute("aria-pressed", "true");
     await page.locator("#next").click();
   }
   await expect(page.locator(".step-title")).toHaveText("Sua urna tem 0 mulheres.");

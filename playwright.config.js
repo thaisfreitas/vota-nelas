@@ -10,14 +10,16 @@ module.exports = defineConfig({
   use: {
     baseURL: "http://localhost:4173",
     trace: "retain-on-failure",
+    // sem rolagem suave: o site troca por rolagem instantânea e os cliques não pegam o painel em movimento
+    reducedMotion: "reduce",
   },
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"] } },
     { name: "celular", use: { ...devices["Pixel 7"] } },
   ],
-  // mesmo servidor estático usado para rodar o site localmente
+  // servidor estático de site/ (tests/servidor.py aguenta os navegadores em paralelo)
   webServer: {
-    command: "python3 -m http.server 4173 --directory site",
+    command: "python3 tests/servidor.py 4173",
     url: "http://localhost:4173",
     reuseExistingServer: !process.env.CI,
   },
