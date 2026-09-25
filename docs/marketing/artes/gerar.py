@@ -94,14 +94,14 @@ ARTES = {
     "feed_02_carrossel-1": (FEED, "", f"""{LOGO}
       <div class="meio">
         <h1 style="font-size:104px">Na urna você digita <span class="v">6 números.</span></h1>
-        <h1 style="font-size:104px;margin-top:30px">E se todos forem de <span class="v">mulheres?</span></h1>
+        <h1 style="font-size:104px;margin-top:30px">E se quase todos forem de <span class="v">mulheres?</span></h1>
         <p class="m" style="font-size:36px;margin-top:50px">Arraste para ver como montar sua urna em 3 minutos →</p>
       </div>{RODAPE}"""),
 
     "feed_02_carrossel-2": (FEED, "", f"""{LOGO}
       <div class="meio" style="gap:58px">
         <div class="passo"><div class="n">1</div><div><h1 style="font-size:64px">Escolha seu estado</h1><p class="m" style="font-size:32px;margin-top:10px">No mapa ou na lista.</p></div></div>
-        <div class="passo"><div class="n">2</div><div><h1 style="font-size:64px">Uma mulher para cada cargo</h1><p class="m" style="font-size:32px;margin-top:10px">Na mesma ordem da urna. Pode pular os cargos que quiser.</p></div></div>
+        <div class="passo"><div class="n">2</div><div><h1 style="font-size:64px">Uma mulher em cada cargo que quiser</h1><p class="m" style="font-size:32px;margin-top:10px">Na ordem da urna. Onde não houver uma candidata que te represente, é só pular.</p></div></div>
         <div class="passo"><div class="n">3</div><div><h1 style="font-size:64px">Receba sua colinha</h1><p class="m" style="font-size:32px;margin-top:10px">Com os números, pronta para enviar a 3 amigas.</p></div></div>
       </div>{RODAPE}"""),
 
@@ -132,7 +132,7 @@ ARTES = {
     # ---------- stories do Instagram e status do WhatsApp (1080x1920) ----------
     "story_01_convite": (STORY, "", f"""{LOGO}
       <div class="meio">
-        <h1 style="font-size:104px">Monte sua urna <span class="v">só com mulheres.</span></h1>
+        <h1 style="font-size:104px">Monte sua urna <span class="v">com mais mulheres.</span></h1>
         <p style="font-size:44px;font-weight:600;margin:40px 0 50px">6 números. 3 minutos. Uma colinha para levar no dia 4.</p>
         <div style="width:560px">{dots()}</div>
         <p class="m" style="font-size:34px;margin-top:26px">Se a Câmara tivesse 100 cadeiras, só 17 seriam de mulheres.</p>
@@ -165,13 +165,13 @@ ARTES = {
       <div class="meio" style="flex-direction:row;align-items:center;gap:80px">
         <div><div class="num v" style="font-size:200px">52,8%</div><p style="font-size:40px;font-weight:700">do eleitorado</p></div>
         <div><div class="num r" style="font-size:200px">17,2%</div><p style="font-size:40px;font-weight:700">da Câmara</p></div>
-        <p class="m" style="font-size:38px;max-width:420px">Monte sua urna só com mulheres em 3 minutos.</p>
+        <p class="m" style="font-size:38px;max-width:420px">Monte sua urna com mais mulheres em 3 minutos.</p>
       </div>{RODAPE}"""),
 
     "x_02_como-funciona": (X, "escuro", f"""{LOGO}
       <div class="meio">
-        <h1 style="font-size:100px">Na urna, 6 números.<br><span class="v">Todos de mulheres.</span></h1>
-        <p style="font-size:40px;font-weight:600;margin-top:34px">Escolha seu estado, uma candidata por cargo e receba sua colinha.</p>
+        <h1 style="font-size:100px">Na urna, 6 números.<br><span class="v">A maioria de mulheres.</span></h1>
+        <p style="font-size:40px;font-weight:600;margin-top:34px">Escolha seu estado, uma mulher nos cargos que quiser e receba sua colinha.</p>
       </div>{RODAPE}"""),
 }
 
@@ -179,7 +179,7 @@ ARTES = {
 for faltam in range(8, 0, -1):
     titulo = "Amanhã é dia de votar." if faltam == 1 else f'Faltam <span class="v">{faltam} dias</span>.'
     apoio = ("Sua colinha está pronta? Anote os números ou tire um print hoje."
-             if faltam == 1 else "Já montou sua urna só com mulheres?")
+             if faltam == 1 else "Já montou sua urna com mais mulheres?")
     ARTES[f"story_contagem_{faltam:02d}"] = (STORY, "escuro" if faltam == 1 else "", f"""{LOGO}
       <div class="meio">
         <p class="m" style="font-size:44px;font-weight:700">Eleições · 4 de outubro</p>

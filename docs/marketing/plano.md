@@ -59,9 +59,9 @@ Hashtags: `#VotaNelas` `#EuVotoNelas` `#MaisMulheresNaPolítica` `#Eleições202
 ### Instagram
 
 **25/09, carrossel "Como funciona"**
-> Na urna você digita 6 números. E se todos forem de mulheres?
+> Na urna você digita 6 números. E se quase todos forem de mulheres?
 >
-> Criei o Vota Nelas: você escolhe seu estado, uma mulher para cada cargo, na ordem da urna, e recebe uma colinha pronta para levar no dia 4 e mandar para as amigas.
+> Criei o Vota Nelas: você escolhe seu estado e uma mulher em cada cargo que quiser, na ordem da urna (onde não houver uma candidata que te represente, é só pular), e recebe uma colinha pronta para levar no dia 4 e mandar para as amigas.
 >
 > Aparecem todas as candidatas aptas, de todos os partidos, com os dados oficiais do TSE e em ordem sorteada. Quem escolhe é você.
 >
@@ -72,7 +72,7 @@ Hashtags: `#VotaNelas` `#EuVotoNelas` `#MaisMulheresNaPolítica` `#Eleições202
 > Mulheres são 52,8% do eleitorado (TSE). Na Câmara dos Deputados, são 17,2% (88 de 513).
 >
 > A conta não fecha. Em 4 de outubro, dá para mudar isso.
-> Monte sua urna só com mulheres: votanelas.com.br (link na bio)
+> Monte sua urna com mais mulheres: votanelas.com.br (link na bio)
 
 **27/09, colinha**
 > O celular não entra na cabine. A colinha em papel pode.
@@ -90,9 +90,9 @@ Hashtags: `#VotaNelas` `#EuVotoNelas` `#MaisMulheresNaPolítica` `#Eleições202
 ### X (Twitter)
 
 **25/09, fio de lançamento**
-> 1/ Mulheres são 52,8% do eleitorado e 17,2% da Câmara. Criei um site para ajudar a mudar isso: você monta sua urna só com mulheres em 3 minutos. votanelas.com.br
+> 1/ Mulheres são 52,8% do eleitorado e 17,2% da Câmara. Criei um site para ajudar a mudar isso: você monta sua urna com mais mulheres em 3 minutos. votanelas.com.br
 >
-> 2/ Escolhe o estado, uma candidata por cargo, na ordem da urna, e recebe uma colinha para levar no dia 4.
+> 2/ Escolhe o estado e uma mulher nos cargos que quiser, na ordem da urna, e recebe uma colinha para levar no dia 4.
 >
 > 3/ É suprapartidário: aparecem todas as candidatas aptas, de todos os partidos, com dados oficiais do TSE e em ordem sorteada.
 >
@@ -110,7 +110,7 @@ Hashtags: `#VotaNelas` `#EuVotoNelas` `#MaisMulheresNaPolítica` `#Eleições202
 ### WhatsApp
 
 **Onda 1, 25/09, grupos de amigas e família**
-> Oi, gente! Criei um site para quem quer votar em mais mulheres nesse domingo, dia 4: você escolhe seu estado e monta sua urna só com mulheres, cargo por cargo, e recebe uma colinha com os números.
+> Oi, gente! Criei um site para quem quer votar em mais mulheres nesse domingo, dia 4: você escolhe seu estado e monta sua urna com mais mulheres, cargo por cargo, e recebe uma colinha com os números.
 > É suprapartidário, com todas as candidatas aptas e dados oficiais do TSE. Leva 3 minutos: votanelas.com.br
 > Se gostar, passa para 3 amigas 💜
 
@@ -134,12 +134,12 @@ Pedir para movimentos, coletivos e perfis de mulheres compartilharem. O argument
 **Atenção:** "Vote Nelas" aparece entre os apoiadores do ConfiaNelas, um nome quase igual ao nosso. Antes de procurar parceiras, vale ver se é outro projeto e, se for, citar o endereço `votanelas.com.br` sempre por extenso, para não confundir.
 
 **Mensagem para movimentos e coletivos (DM ou e-mail):**
-> Oi! Sou a Thais Freitas e criei o Vota Nelas (votanelas.com.br), um site suprapartidário em que a pessoa monta a urna só com mulheres, cargo por cargo, e recebe uma colinha para levar no dia 4.
+> Oi! Sou a Thais Freitas e criei o Vota Nelas (votanelas.com.br), um site suprapartidário em que a pessoa monta a urna com mais mulheres, cargo por cargo, e recebe uma colinha para levar no dia 4.
 > Aparecem todas as candidatas aptas, de todos os partidos, com dados oficiais do TSE e em ordem sorteada; o site não pede nenhum dado pessoal.
 > Vocês topariam compartilhar com a comunidade de vocês? Posso mandar artes prontas para feed e stories. Obrigada!
 
 **Mensagem para perfis de conteúdo:**
-> Oi! Acompanho seu conteúdo sobre representatividade e acho que o Vota Nelas pode interessar ao seu público: em 3 minutos a pessoa monta a urna só com mulheres e recebe uma colinha para o dia 4. É suprapartidário, com dados oficiais do TSE. Se quiser compartilhar, tenho artes prontas. votanelas.com.br
+> Oi! Acompanho seu conteúdo sobre representatividade e acho que o Vota Nelas pode interessar ao seu público: em 3 minutos a pessoa monta a urna com mais mulheres e recebe uma colinha para o dia 4. É suprapartidário, com dados oficiais do TSE. Se quiser compartilhar, tenho artes prontas. votanelas.com.br
 
 **Mensagem para o ConfiaNelas:**
 > Oi, equipe do ConfiaNelas! Sou a Thais Freitas, do Vota Nelas (votanelas.com.br). O site de vocês inspirou o nosso e está indicado no nosso rodapé. Nós fazemos a parte prática: a pessoa escolhe uma mulher por cargo e recebe a colinha para levar à urna. Toparia trocar indicações ou compartilhar? Seria lindo somar forças até o dia 4.
