@@ -535,7 +535,9 @@ footer ul{margin:8px 0 0;padding-left:18px}
       panel.innerHTML = `${stepsBar()}<p class="step-label">Voto ${state.step} de 6 · ${UF[state.uf].nome}</p>
         <h3 class="step-title">${c.nome}</h3><p class="step-help" id="loading">Carregando as candidatas…</p>`;
       const uf=state.uf;
-      Promise.all([carregar(uf),carregar("BR")]).then(()=>{ if(state.uf===uf){ limparPicks(); renderPanel(); renderSlots(); } },()=>{
+      // espera os dois pedidos terminarem: assim "Tentar de novo" nunca reaproveita um pedido que ainda vai falhar
+      Promise.allSettled([carregar(uf),carregar("BR")]).then(r=>{
+        if(r.every(x=>x.status==="fulfilled")){ if(state.uf===uf){ limparPicks(); renderPanel(); renderSlots(); } return; }
         const l=$("#loading"); if(!l) return;
         l.innerHTML='Não foi possível carregar as candidatas. Confira sua internet. <button class="linkbtn" type="button" id="retry">Tentar de novo</button>';
         $("#retry").onclick=renderPanel;

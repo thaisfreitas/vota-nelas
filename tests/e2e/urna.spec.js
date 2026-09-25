@@ -109,7 +109,10 @@ test("cargo sem mulheres mostra aviso e deixa seguir", async ({ page }) => {
 test("falha ao carregar os dados mostra opção de tentar de novo", async ({ page }) => {
   let falhar = true;
   errosEsperados.push("503");
-  await page.route("**/dados/*.json", (r) => (falhar ? r.fulfill({ status: 503 }) : r.continue()));
+  // depois da falha, os dados vêm direto do disco, sem depender do servidor de testes
+  await page.route("**/dados/*.json", (r) =>
+    falhar ? r.fulfill({ status: 503 }) : r.fulfill({ path: `site${new URL(r.request().url()).pathname}` })
+  );
   await escolherEstado(page, "SP");
   await expect(page.locator("#loading")).toContainText("Não foi possível carregar");
   falhar = false;
