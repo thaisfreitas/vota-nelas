@@ -17,7 +17,7 @@
       "binding": "DB",
       "database_name": "vota-nelas",
       // ID do banco criado no painel do Cloudflare (Storage & databases → D1)
-      "database_id": "PREENCHER_COM_O_ID_DO_D1",
+      "database_id": "ff7025a2-f146-483a-9464-56b77bd24def",
       "migrations_dir": "migrations"
     }
   ],
