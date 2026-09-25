@@ -7,8 +7,9 @@ Uso:
 Os zips são os itens "XX - Fotos de candidatos" de
 https://dadosabertos.tse.jus.br/dataset/candidatos-2026 (foto_cand2026_XX_div.zip).
 Só entram as fotos das candidatas que já estão em site/dados/ (mulheres aptas).
-Cada foto é reduzida (maior lado 160 px, JPEG) com o sips do macOS, sem corte nem
-retoque: o recorte redondo é feito só na exibição, pelo CSS.
+As fotos do TSE já são pequenas (cerca de 161x225 px): as que cabem em 160 px são
+copiadas sem nenhuma alteração; só as maiores são reduzidas com o sips do macOS,
+sem corte nem retoque. O recorte redondo é feito só na exibição, pelo CSS.
 
 Depois de extrair, marca em site/dados/{UF}.json quem tem foto (5º campo de cada
 candidata: 1 com foto, 0 sem) e mostra quantas candidatas de cada cargo têm foto.
@@ -17,6 +18,7 @@ import glob
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -44,8 +46,18 @@ def candidatas_do_site():
     return sqs
 
 
+def medidas(caminho):
+    saida = subprocess.run(["sips", "-g", "pixelWidth", "-g", "pixelHeight", caminho],
+                           capture_output=True, text=True, check=True).stdout
+    return [int(l.split()[-1]) for l in saida.splitlines() if "pixel" in l]
+
+
 def reduzir(origem, destino):
-    subprocess.run(["sips", "-Z", str(LADO), "-s", "format", "jpeg", "-s", "formatOptions", "70",
+    """Copia a foto como está se já cabe em LADO px; se não, reduz (nunca amplia)."""
+    if origem.lower().endswith((".jpg", ".jpeg")) and max(medidas(origem)) <= LADO + 1:
+        shutil.copyfile(origem, destino)
+        return
+    subprocess.run(["sips", "-Z", str(LADO), "-s", "format", "jpeg", "-s", "formatOptions", "80",
                     origem, "--out", destino], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
