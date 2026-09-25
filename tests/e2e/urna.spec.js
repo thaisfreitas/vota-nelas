@@ -75,6 +75,9 @@ test("monta a urna completa e envia a colinha pelo WhatsApp", async ({ page, con
   expect(texto).toContain(`*${fed}*`);
   expect(texto).toContain(`*${est}*`);
   expect(texto).toContain("(SP)");
+  // o link aponta para o próprio site, nunca para o protótipo no claude.ai
+  expect(texto).toContain("http://localhost:4173/");
+  expect(texto).not.toContain("claude.ai");
 });
 
 test("busca por nome ignora acentos", async ({ page }) => {
