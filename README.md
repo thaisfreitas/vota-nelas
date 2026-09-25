@@ -2,13 +2,13 @@
 
 Site suprapartidário para aumentar o número de mulheres eleitas nas eleições de 4 de outubro de 2026.
 
-Mulheres são 52,8% do eleitorado e 17,2% da Câmara dos Deputados (TSE e Câmara, setembro de 2026). O Vota Nelas ajuda cada eleitora e eleitor a montar uma urna só com mulheres, com os nomes e números oficiais do TSE, e a compartilhar essa escolha com as amigas.
+Mulheres são 52,8% do eleitorado e 17,2% da Câmara dos Deputados (TSE e Câmara, setembro de 2026). O Vota Nelas ajuda cada eleitora e eleitor a montar uma urna com mais mulheres, com os nomes e números oficiais do TSE, e a compartilhar essa escolha com as amigas.
 
 Responsável: Thais Freitas (thaisfreitas31@gmail.com)
 
 ## O que o site faz
 
-- **Monte sua urna com elas:** a pessoa escolhe o estado no mapa e uma mulher para cada cargo, na ordem da urna: deputada federal, deputada estadual ou distrital, dois votos para o Senado, governadora e presidenta. No fim, recebe uma colinha com os números para levar à votação e enviar pelo WhatsApp.
+- **Monte sua urna com elas:** a pessoa escolhe o estado no mapa e uma mulher em cada cargo que quiser, na ordem da urna (e pode pular os outros): deputada federal, deputada estadual ou distrital, dois votos para o Senado, governadora e presidenta. No fim, recebe uma colinha com os números para levar à votação e enviar pelo WhatsApp.
 - **Voto em dobro:** explica a regra da EC 111/2021. Votos em deputadas federais contam em dobro na divisão dos fundos partidário e eleitoral.
 - **Placar:** mostra a presença de mulheres na Câmara, no Senado, nas candidaturas de 2026 e no eleitorado.
 - **Manifesto "Eu voto nelas":** contador de assinaturas. Não é pesquisa de voto e não guarda dados pessoais, só o estado.
