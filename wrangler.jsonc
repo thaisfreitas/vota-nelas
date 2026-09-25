@@ -1,13 +1,44 @@
-// Configuração do Cloudflare Workers: publica a pasta site/ como site estático.
+// Configuração do Cloudflare Workers: o Worker serve a pasta site/ e a API do manifesto.
 {
   "name": "vota-nelas",
   "compatibility_date": "2026-09-24",
+  "main": "src/worker.js",
   "assets": {
-    "directory": "./site"
+    "directory": "./site",
+    "binding": "ASSETS"
   },
   // o deploy liga o domínio ao site e cria os registros de DNS
   "routes": [
     { "pattern": "votanelas.com.br", "custom_domain": true },
     { "pattern": "www.votanelas.com.br", "custom_domain": true }
-  ]
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "vota-nelas",
+      // ID do banco criado no painel do Cloudflare (Storage & databases → D1)
+      "database_id": "PREENCHER_COM_O_ID_DO_D1",
+      "migrations_dir": "migrations"
+    }
+  ],
+  // no máximo 5 assinaturas por minuto do mesmo IP (o IP não é gravado)
+  "ratelimits": [
+    { "name": "LIMITADOR", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } }
+  ],
+  "env": {
+    // só para os testes locais (wrangler dev --env teste): limite alto para os navegadores em paralelo
+    "teste": {
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "vota-nelas",
+          "database_id": "local-teste",
+          "migrations_dir": "migrations"
+        }
+      ],
+      "ratelimits": [
+        { "name": "LIMITADOR", "namespace_id": "1002", "simple": { "limit": 10000, "period": 60 } }
+      ]
+    }
+  }
 }
