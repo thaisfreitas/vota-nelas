@@ -258,3 +258,24 @@ test("guia de como pesquisar uma candidata, com fontes oficiais e avaliações e
   await expect(guia).toContainText("não recomenda nenhuma candidata");
 });
 
+test("candidata com foto oficial mostra a foto; sem foto, as iniciais", async ({ page }) => {
+  // marca a primeira deputada federal do AC como tendo foto e serve uma imagem qualquer
+  let comFoto = "", semFoto = "";
+  await page.route("**/dados/AC.json", async (r) => {
+    const resp = await r.fetch();
+    const d = await resp.json();
+    d.fed = d.fed.map((c, i) => [c[0], c[1], c[2], c[3], i === 0 ? 1 : 0]);
+    [comFoto, semFoto] = [d.fed[0][0], d.fed[1][0]];
+    await r.fulfill({ response: resp, json: d });
+  });
+  await page.route("**/fotos/*.jpg", (r) => r.fulfill({ path: "site/og.png", contentType: "image/png" }));
+  await escolherEstado(page, "AC");
+  // a lista é sorteada e mostra 6 por vez: busca cada uma pelo nome
+  await page.locator("#q").fill(comFoto);
+  const card = page.locator(".cand", { hasText: comFoto }).first();
+  await expect(card.locator(".avatar img")).toHaveAttribute("src", /^fotos\/\d+\.jpg$/);
+  await page.locator("#q").fill(semFoto);
+  const outro = page.locator(".cand", { hasText: semFoto }).first();
+  await expect(outro.locator(".avatar img")).toHaveCount(0);
+  await expect(outro.locator(".avatar")).toHaveText(/^[A-ZÀ-Ú]{1,2}$/);
+});

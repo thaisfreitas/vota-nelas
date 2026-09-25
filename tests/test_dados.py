@@ -9,6 +9,7 @@ import re
 import unittest
 
 DADOS = os.path.join(os.path.dirname(__file__), "..", "site", "dados")
+FOTOS = os.path.join(os.path.dirname(__file__), "..", "site", "fotos")
 UFS = "AC AL AP AM BA CE DF ES GO MA MT MS MG PA PB PR PE PI RJ RN RS RO RR SC SP SE TO".split()
 # dígitos do número na urna por cargo
 DIGITOS = {"fed": 4, "est": 5, "sen": 3, "gov": 2, "pres": 2}
@@ -42,8 +43,11 @@ class TestDados(unittest.TestCase):
             for cargo in cargos:
                 for c in d[cargo]:
                     with self.subTest(arquivo=nome, cargo=cargo, candidata=c):
-                        self.assertEqual(len(c), 4, "esperado [nome, número, partido, SQ_CANDIDATO]")
-                        nome_urna, numero, partido, sq = c
+                        self.assertEqual(len(c), 5, "esperado [nome, número, partido, SQ_CANDIDATO, tem foto]")
+                        nome_urna, numero, partido, sq, foto = c
+                        self.assertIn(foto, (0, 1))
+                        # a marcação de foto tem que bater com o arquivo publicado
+                        self.assertEqual(bool(foto), os.path.exists(os.path.join(FOTOS, f"{sq}.jpg")))
                         self.assertTrue(nome_urna.strip())
                         self.assertNotEqual(nome_urna, nome_urna.upper(), "nome deveria estar formatado, não em maiúsculas")
                         self.assertRegex(numero, rf"^\d{{{DIGITOS[cargo]}}}$")

@@ -24,6 +24,7 @@ import unicodedata
 import zipfile
 
 SAIDA = os.path.join(os.path.dirname(__file__), "..", "site", "dados")
+FOTOS = os.path.join(os.path.dirname(__file__), "..", "site", "fotos")
 
 # DS_CARGO do TSE -> chave usada no site (distrital entra como "est")
 CARGOS = {
@@ -107,6 +108,7 @@ def main():
     ap.add_argument("cand", help="consulta_cand_2026.zip")
     ap.add_argument("--complementar", help="consulta_cand_complementar_2026.zip (traz a situação da candidatura)")
     ap.add_argument("--saida", default=SAIDA, help="pasta de saída (padrão: site/dados)")
+    ap.add_argument("--fotos", default=FOTOS, help="pasta das fotos extraídas por scripts/tse_fotos.py (padrão: site/fotos)")
     ap.add_argument("--sem-situacao", action="store_true",
                     help="só para conferir: não filtra por situação (NÃO publicar assim)")
     args = ap.parse_args()
@@ -143,6 +145,8 @@ def main():
             l["SG_PARTIDO"].strip(),
             l["SQ_CANDIDATO"].strip(),
         ]
+        # 5º campo: 1 se a foto oficial já foi extraída (scripts/tse_fotos.py), 0 se não
+        item.append(1 if os.path.exists(os.path.join(args.fotos, f"{item[3]}.jpg")) else 0)
         if cargo == "pres":
             br["pres"].append(item)
         elif uf in por_uf:

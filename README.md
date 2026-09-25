@@ -30,9 +30,12 @@ site/                      o que vai para o ar
   index.html               página completa (HTML, CSS e JS num arquivo só)
   dados/{UF}.json          candidatas de cada estado (gerado pelo script)
   dados/BR.json            candidatas a presidenta (gerado pelo script)
+  fotos/{SQ}.jpg           fotos oficiais das candidatas, reduzidas (gerado pelo script)
   og.png, favicon.svg      imagem de compartilhamento e ícone
 scripts/
   tse_para_json.py         converte os arquivos do TSE em site/dados/
+  tse_fotos.py             extrai e reduz as fotos oficiais para site/fotos/
+  votacoes_deputadas.py    votos na Câmara das candidatas que já foram deputadas
   og.html, gerar_og.sh     fonte da og.png e script que gera a imagem
 src/worker.js              Worker: serve site/ e a API do manifesto
 migrations/                tabelas do manifesto no D1
@@ -65,7 +68,14 @@ A situação das candidaturas muda até a véspera da eleição, então vale rep
    ```
 
    O script mostra quantas candidatas encontrou por estado, avisa quando um cargo não tem mulheres e alerta se o TSE usar uma situação de candidatura que ele não conhece.
-4. Faça o commit de `site/dados/` e publique.
+4. Para as fotos oficiais, baixe também os itens **"XX - Fotos de candidatos"** (27 estados e BR) para `dados-tse/fotos/` e rode:
+
+   ```bash
+   python3 scripts/tse_fotos.py dados-tse/fotos
+   ```
+
+   O script pega só as fotos das candidatas do site, reduz cada uma (sem cortar nem retocar) para `site/fotos/`, marca em `site/dados/` quem tem foto e mostra quantas candidatas de cada cargo têm foto. Usa o `sips`, que vem no macOS.
+5. Faça o commit de `site/dados/` e `site/fotos/` e publique.
 
 Para conferir os números sem o arquivo complementar, use `--sem-situacao --saida /tmp/previa`. Esse resultado inclui candidaturas inaptas e não deve ser publicado.
 

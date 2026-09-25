@@ -123,6 +123,17 @@ class TestConversor(unittest.TestCase):
         self.assertIn("ATENÇÃO", r.stdout)
         self.assertEqual(len(self.json(saida, "SP.json")["fed"]), 1)
 
+    def test_marca_quem_tem_foto(self):
+        com_foto = self.add("COM FOTO")
+        sem_foto = self.add("SEM FOTO")
+        fotos = os.path.join(self.tmp.name, "fotos")
+        os.makedirs(fotos)
+        open(os.path.join(fotos, f"{com_foto}.jpg"), "wb").close()
+        r, saida = self.converter("--fotos", fotos)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        marcas = {c[3]: c[4] for c in self.json(saida, "SP.json")["fed"]}
+        self.assertEqual(marcas, {com_foto: 1, sem_foto: 0})
+
     def test_exige_arquivo_complementar(self):
         self.add("MARIA")
         r, saida = self.converter(complementar=False)

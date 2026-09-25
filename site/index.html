@@ -168,6 +168,7 @@ select{width:100%;min-height:52px;font:500 17px var(--body);padding:0 14px;borde
 .cand:hover{box-shadow:inset 0 0 0 2px var(--roxo)}
 .cand[aria-pressed="true"]{box-shadow:inset 0 0 0 3px var(--vinho);background:var(--soft)}
 .avatar{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;color:#fff;font-size:18px;background:var(--vinho)}
+.avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:50% 20%}
 .cand .nm{font-weight:700;font-size:16px;line-height:1.25}
 .cand .meta{font-size:13px;color:var(--muted)}
 .cand .num{font-family:var(--mono);font-size:20px;letter-spacing:.08em;color:var(--vinho)}
@@ -518,7 +519,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
     if(cache[ck]) return cache[ck];
     const d = DADOS[arq], rv = rng(VISITA+ck);
     const out = (d[key]||[])
-      .map(([nome,num,partido,sq])=>({id:sq,nome,num,partido,link:linkTSE(arq,sq),camara:votosCamara&&votosCamara.candidatas[sq]}))
+      .map(([nome,num,partido,sq,foto])=>({id:sq,nome,num,partido,foto:!!foto,link:linkTSE(arq,sq),camara:votosCamara&&votosCamara.candidatas[sq]}))
       .map(x=>[rv(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
     // só guarda depois que os votos da Câmara chegaram, para o card não ficar sem eles
     if(votosCarregados) cache[ck]=out;
@@ -622,7 +623,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
       $("#cands").innerHTML = show.length ? show.map(x=>`
         <div class="cand-wrap">
           <button class="cand" type="button" data-id="${x.id}" aria-pressed="${x.id===sel}">
-            <span class="avatar" aria-hidden="true">${esc(iniciais(x.nome))}</span>
+            <span class="avatar" aria-hidden="true">${x.foto?`<img src="fotos/${esc(x.id)}.jpg" alt="" loading="lazy" width="48" height="48">`:esc(iniciais(x.nome))}</span>
             <span><span class="nm">${esc(x.nome)}</span><br><span class="meta">${esc(x.partido)}</span><br><span class="num">${esc(x.num)}</span></span>
           </button>
           <a class="know" href="${esc(x.link)}" target="_blank" rel="noopener">Conhecer no site do TSE ↗</a>
