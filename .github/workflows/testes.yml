@@ -20,7 +20,7 @@ jobs:
         run: python -m unittest discover -s tests -v
 
   site:
-    name: Site no navegador (Playwright)
+    name: Site e API no navegador (Playwright + Worker local)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -29,9 +29,6 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npx playwright test

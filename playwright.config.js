@@ -15,12 +15,14 @@ module.exports = defineConfig({
   },
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"] } },
-    { name: "celular", use: { ...devices["Pixel 7"] } },
+    // a API não depende do aparelho: roda só no desktop
+    { name: "celular", use: { ...devices["Pixel 7"] }, testIgnore: /api\.spec\.js/ },
   ],
-  // servidor estático de site/ (tests/servidor.py aguenta os navegadores em paralelo)
+  // o Worker de verdade (site + API do manifesto) com um D1 local, via wrangler dev
   webServer: {
-    command: "python3 tests/servidor.py 4173",
+    command: "npm run dev",
     url: "http://localhost:4173",
+    timeout: 120_000,
     reuseExistingServer: !process.env.CI,
   },
 });

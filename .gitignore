@@ -10,3 +10,6 @@ __pycache__/
 # testes
 test-results/
 playwright-report/
+
+# estado local do wrangler dev (D1 dos testes)
+.wrangler/

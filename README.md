@@ -15,7 +15,7 @@ Responsável: Thais Freitas (thaisfreitas31@gmail.com)
 
 ## Como funciona
 
-O site é estático: uma página em HTML, CSS e JavaScript, sem build e sem framework.
+O site é uma página em HTML, CSS e JavaScript, sem build e sem framework, servida por um Worker do Cloudflare. O mesmo Worker tem a API do manifesto (`/api/manifesto`), que guarda as assinaturas num banco D1: só o estado e a data de cada uma. Um limite de 5 assinaturas por minuto por aparelho evita que alguém infle o contador, sem gravar o IP.
 
 As candidatas vêm dos [dados abertos do TSE](https://dadosabertos.tse.jus.br/dataset/candidatos-2026). Um script em Python converte os arquivos do TSE em um JSON pequeno por estado, que a página carrega quando a pessoa escolhe onde vota.
 
@@ -34,18 +34,21 @@ site/                      o que vai para o ar
 scripts/
   tse_para_json.py         converte os arquivos do TSE em site/dados/
   og.html, gerar_og.sh     fonte da og.png e script que gera a imagem
-tests/                     testes dos dados, do conversor e do site (Playwright)
+src/worker.js              Worker: serve site/ e a API do manifesto
+migrations/                tabelas do manifesto no D1
+tests/                     testes dos dados, do conversor, da API e do site (Playwright)
 dados-tse/                 arquivos baixados do TSE (fora do git)
-wrangler.jsonc             configuração da publicação no Cloudflare
+wrangler.jsonc             configuração do Worker, do D1 e do limitador no Cloudflare
 ```
 
 ## Rodar localmente
 
 ```bash
-python3 -m http.server 8000 --directory site
+npm install
+npm run dev
 ```
 
-Depois, abra <http://localhost:8000>. É preciso um servidor: abrindo o `index.html` direto do disco, o navegador bloqueia o carregamento dos dados.
+Depois, abra <http://localhost:4173>. O comando sobe o Worker com um banco D1 local (em `.wrangler/teste`, fora do git), então o manifesto funciona de verdade sem tocar nas assinaturas reais.
 
 ## Atualizar as candidatas
 
@@ -70,10 +73,10 @@ Para conferir os números sem o arquivo complementar, use `--sem-situacao --said
 
 ```bash
 python3 -m unittest discover -s tests -v   # dados publicados e conversor do TSE
-npm install && npx playwright test         # site no navegador, no desktop e no celular
+npm install && npx playwright test         # site e API no navegador, no desktop e no celular
 ```
 
-Os testes rodam no GitHub Actions a cada push. A publicação é manual, pelo workflow **Deploy** (Actions → Deploy → Run workflow), e só acontece se todos os testes passarem.
+Os testes rodam no GitHub Actions a cada push. A publicação é manual, pelo workflow **Deploy** (Actions → Deploy → Run workflow), e só acontece se todos os testes passarem. Antes de publicar, o deploy aplica no D1 as migrações novas de `migrations/`.
 
 ## Imagem de compartilhamento
 

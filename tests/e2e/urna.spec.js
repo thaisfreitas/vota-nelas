@@ -137,12 +137,53 @@ test("no dia da eleição o envio e as assinaturas ficam pausados", async ({ pag
   await expect(page.locator("#pledge-note")).toContainText("dia de eleição");
 });
 
-test("assinar o manifesto troca o botão pela confirmação", async ({ page }) => {
+const contador = async (page) => Number(((await page.locator("#count").textContent()) || "").replace(/\D/g, ""));
+
+test("assinatura do manifesto é contada e continua depois de recarregar", async ({ page }) => {
   await page.goto("/#compromisso");
+  await expect(page.locator("#count")).toHaveText(/^[\d.]+$/);
+  const antes = await contador(page);
+
   await page.locator("#pledge-uf").selectOption("BA");
   await page.locator("#pledge-btn").click();
   await expect(page.locator("#pledge-btn")).toBeHidden();
   await expect(page.locator("#pledge-done")).toBeVisible();
+  await expect.poll(() => contador(page)).toBeGreaterThanOrEqual(antes + 1);
+
+  // o total vem do servidor: depois do refresh a assinatura continua contada
+  await page.reload();
+  await expect(page.locator("#count")).toHaveText(/^[\d.]+$/);
+  expect(await contador(page)).toBeGreaterThanOrEqual(antes + 1);
+  await expect(page.locator("#pledge-done")).toBeVisible();
+});
+
+test("manifesto avisa quando a assinatura não é registrada", async ({ page }) => {
+  let resposta = { status: 429 };
+  await page.route("**/api/manifesto", (r) =>
+    r.request().method() === "POST" ? r.fulfill({ ...resposta, contentType: "application/json", body: "{}" }) : r.continue()
+  );
+  errosEsperados.push("429", "net::ERR_FAILED");
+  await page.goto("/#compromisso");
+  await page.locator("#pledge-uf").selectOption("SP");
+
+  await page.locator("#pledge-btn").click();
+  await expect(page.locator("#pledge-note")).toContainText("Tente de novo em um minuto");
+  // não marca como assinado: o botão continua disponível
+  await expect(page.locator("#pledge-btn")).toBeEnabled();
+  await expect(page.locator("#pledge-done")).toBeHidden();
+
+  await page.unroute("**/api/manifesto");
+  await page.route("**/api/manifesto", (r) => (r.request().method() === "POST" ? r.abort() : r.continue()));
+  await page.locator("#pledge-btn").click();
+  await expect(page.locator("#pledge-note")).toContainText("Confira sua internet");
+  await expect(page.locator("#pledge-btn")).toBeEnabled();
+});
+
+test("sem conexão com a API, o contador mostra um traço", async ({ page }) => {
+  errosEsperados.push("net::ERR_FAILED");
+  await page.route("**/api/manifesto", (r) => r.abort());
+  await page.goto("/#compromisso");
+  await expect(page.locator("#count")).toHaveText("—");
 });
 
 test("limpar escolhas pede confirmação e recomeça do mapa", async ({ page }) => {

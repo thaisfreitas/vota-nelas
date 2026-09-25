@@ -759,43 +759,43 @@ footer ul{margin:8px 0 0;padding-left:18px}
   // escolhas salvas de outra visita: confere com os dados atuais antes de a colinha poder ser enviada
   if(state.uf && state.step===0) Promise.all([carregar(state.uf),carregar("BR")]).then(()=>{limparPicks();renderSlots()},()=>{});
 
-  // ---------- compromisso (db) ----------
+  // ---------- manifesto (API em src/worker.js, dados no D1) ----------
   const sel=$("#pledge-uf");
   sel.innerHTML=`<option value="">Escolha seu estado</option>`+UFS.map(([s,n])=>`<option value="${s}">${n}</option>`).join("");
   if(state.uf) sel.value=state.uf;
   const pledgedKey="vn-pledged";
-  let local = []; // compromissos quando não há db
-  let pledges = [];
-  function renderPledges(){
-    const all = pledges.concat(local);
-    $("#count").textContent = all.length.toLocaleString("pt-BR");
-  }
+  const nota = t=>{$("#pledge-note").textContent=t};
+  function mostrarTotal(total){ $("#count").textContent = Number(total).toLocaleString("pt-BR"); }
   function markDone(){ $("#pledge-btn").hidden=true; $("#pledge-done").hidden=false; }
   if(store.get(pledgedKey) && !DIA_ELEICAO) markDone();
-  renderPledges();
 
-  let db=null;
+  // total de assinaturas de todo mundo
+  fetch("/api/manifesto",{cache:"no-store"})
+    .then(r=>{if(!r.ok) throw new Error(r.status); return r.json()})
+    .then(d=>mostrarTotal(d.total))
+    .catch(()=>{ $("#count").textContent="—"; });
+
+  const ERROS = {
+    429:"Muitas assinaturas deste aparelho agora. Tente de novo em um minuto.",
+    403:"Hoje é dia de eleição: novas assinaturas estão pausadas.",
+    400:"Escolha seu estado para assinar."
+  };
   $("#pledge-btn").onclick=async()=>{
     const uf=sel.value;
-    if(!uf){ $("#pledge-note").textContent="Escolha seu estado para assinar."; sel.focus(); return; }
-    $("#pledge-note").textContent="";
+    if(!uf){ nota("Escolha seu estado para assinar."); sel.focus(); return; }
+    nota("");
     $("#pledge-btn").disabled=true;
-    if(db){
-      try{ await db.collection("compromissos").add({uf, ts:Date.now()}); }
-      catch(e){ local.push({uf}); $("#pledge-note").textContent="Sua assinatura ficou salva só neste aparelho."; }
-    } else { local.push({uf}); $("#pledge-note").textContent="No protótipo, o placar compartilhado aparece só para quem tem acesso à página."; }
-    store.set(pledgedKey,"1"); markDone(); renderPledges();
-  };
-
-  (async()=>{
     try{
-      db = window.claude && window.claude.use ? await window.claude.use("db") : null;
-      if(!db) return;
-      db.collection("compromissos").limit(1000).onSnapshot(s=>{
-        pledges=s.docs.map(d=>d.data()).filter(Boolean); renderPledges();
-      },()=>{});
-    }catch(e){ db=null; }
-  })();
+      const r=await fetch("/api/manifesto",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({uf})});
+      if(!r.ok){ nota(ERROS[r.status]||"Não foi possível registrar agora. Tente de novo."); return; }
+      mostrarTotal((await r.json()).total);
+      store.set(pledgedKey,"1"); markDone();
+    }catch(e){
+      nota("Não foi possível registrar agora. Confira sua internet e tente de novo.");
+    }finally{
+      $("#pledge-btn").disabled=false;
+    }
+  };
 })();
 </script>
 </body>

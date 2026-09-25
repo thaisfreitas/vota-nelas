@@ -1,11 +1,13 @@
 {
   "name": "vota-nelas",
   "private": true,
-  "description": "Testes de ponta a ponta do site Vota Nelas",
+  "description": "Site Vota Nelas: Worker do Cloudflare e testes de ponta a ponta",
   "scripts": {
+    "dev": "wrangler d1 migrations apply vota-nelas --local --env teste --persist-to .wrangler/teste && wrangler dev --env teste --persist-to .wrangler/teste --port 4173 --ip 127.0.0.1",
     "test:e2e": "playwright test"
   },
   "devDependencies": {
-    "@playwright/test": "^1.55.0"
+    "@playwright/test": "^1.55.0",
+    "wrangler": "4.139.0"
   }
 }
