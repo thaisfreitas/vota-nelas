@@ -2,7 +2,7 @@
 
 Site suprapartidário para aumentar o número de mulheres eleitas nas eleições de 4 de outubro de 2026.
 
-Mulheres são 52% do eleitorado e 17,7% da Câmara dos Deputados. O Vota Nelas ajuda cada eleitora e eleitor a montar uma urna só com mulheres, com os nomes e números oficiais do TSE, e a compartilhar essa escolha com as amigas.
+Mulheres são 52,8% do eleitorado e 17,2% da Câmara dos Deputados (TSE e Câmara, setembro de 2026). O Vota Nelas ajuda cada eleitora e eleitor a montar uma urna só com mulheres, com os nomes e números oficiais do TSE, e a compartilhar essa escolha com as amigas.
 
 Responsável: Thais Freitas (thaisfreitas31@gmail.com)
 

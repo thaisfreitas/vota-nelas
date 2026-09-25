@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Vota Nelas: monte sua urna só com mulheres</title>
-<meta name="description" content="Mulheres são 52% do eleitorado e só 17,7% da Câmara. Monte sua urna com mulheres em 3 minutos e envie a colinha para 3 amigas. Eleições de 4 de outubro de 2026.">
+<meta name="description" content="Mulheres são 52,8% do eleitorado e só 17,2% da Câmara. Monte sua urna com mulheres em 3 minutos e envie a colinha para 3 amigas. Eleições de 4 de outubro de 2026.">
 <meta name="theme-color" content="#A3123F">
 <link rel="canonical" href="https://votanelas.com.br/">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -17,7 +17,7 @@
 <meta property="og:image" content="https://votanelas.com.br/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Vota Nelas: mulheres são 52% do eleitorado e 17,7% da Câmara.">
+<meta property="og:image:alt" content="Vota Nelas: mulheres são 52,8% do eleitorado e 17,2% da Câmara.">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -284,15 +284,15 @@ footer ul{margin:8px 0 0;padding-left:18px}
     <div class="hero-grid">
       <div>
         <p class="eyebrow">Eleições · 4 de outubro de 2026</p>
-        <h1 style="margin-top:12px">Mulheres são 52% do eleitorado. Na Câmara, são <span class="hl">17,7%</span>.</h1>
+        <h1 style="margin-top:12px">Mulheres são 52,8% do eleitorado. Na Câmara, são <span class="hl">17,2%</span>.</h1>
         <p class="lead">Na urna você digita 6 números. Monte sua urna só com mulheres e envie para 3 amigas. Leva 3 minutos.</p>
         <div class="cta-row">
           <a class="btn btn-primary" href="#urna">Montar minha urna</a>
           <a class="btn btn-ghost" href="#dobro">O que conta em dobro?</a>
         </div>
       </div>
-      <div class="people" aria-label="Retrato da Câmara: a cada 100 cadeiras, 18 são de mulheres">
-        <p class="cap">Se a Câmara tivesse 100 cadeiras, <b>só 18 seriam de mulheres</b>.</p>
+      <div class="people" aria-label="Retrato da Câmara: a cada 100 cadeiras, 17 são de mulheres">
+        <p class="cap">Se a Câmara tivesse 100 cadeiras, <b>só 17 seriam de mulheres</b>.</p>
         <div class="dots" id="dots"></div>
         <div class="legend"><span><i style="background:var(--vinho)"></i>Deputadas</span><span><i style="background:var(--men)"></i>Deputados</span></div>
       </div>
@@ -392,10 +392,11 @@ footer ul{margin:8px 0 0;padding-left:18px}
     <div>
       <b style="color:var(--ink)">Fontes</b>
       <ul>
-        <li><a href="https://www.poder360.com.br/poder-congresso/maior-da-historia-bancada-feminina-ainda-e-so-18-do-congresso/" target="_blank" rel="noopener">Bancada feminina (Poder360)</a></li>
-        <li><a href="https://www.correiobraziliense.com.br/politica/2026/08/7481463-tse-registra-mais-de-20-mil-candidaturas-3482-sao-de-mulheres.html" target="_blank" rel="noopener">Candidaturas 2026 (TSE via Correio Braziliense)</a></li>
-        <li><a href="https://www.camara.leg.br/radio/programas/905034-eleicao-de-negros-e-mulheres-vai-contar-em-dobro-para-distribuicao-do-fundo-eleitoral/" target="_blank" rel="noopener">Voto em dobro (Rádio Câmara)</a></li>
-        <li><a href="https://dadosabertos.tse.jus.br/dataset/candidatos-2026" target="_blank" rel="noopener">Dados abertos do TSE</a></li>
+        <li><a href="https://dadosabertos.camara.leg.br/" target="_blank" rel="noopener">Deputadas em exercício (Câmara dos Deputados, dados abertos)</a></li>
+        <li><a href="https://legis.senado.leg.br/dadosabertos/" target="_blank" rel="noopener">Senadoras em exercício (Senado Federal, dados abertos)</a></li>
+        <li><a href="https://www.tse.jus.br/comunicacao/noticias/2026/Setembro/faltam-30-dias-brasil-tem-mais-de-158-milhoes-de-eleitoras-e-eleitores-aptos-a-votar" target="_blank" rel="noopener">Eleitorado 2026 (TSE)</a></li>
+        <li><a href="https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc111.htm" target="_blank" rel="noopener">Voto em dobro (Emenda Constitucional 111/2021)</a></li>
+        <li><a href="https://dadosabertos.tse.jus.br/dataset/candidatos-2026" target="_blank" rel="noopener">Candidaturas 2026 (TSE, dados abertos)</a></li>
         <li>Mapa: <a href="https://github.com/VictorCazanave/svg-maps" target="_blank" rel="noopener">SVG Maps</a>, de Victor Cazanave (CC BY 4.0)</li>
       </ul>
     </div>
@@ -428,10 +429,11 @@ footer ul{margin:8px 0 0;padding-left:18px}
   const FORA = {AL:[583,233],PB:[590,193],PE:[590,213],RN:[590,174],SE:[573,247],ES:[530,398],RJ:[505,440]};
 
   const BARS = [
-    {t:"Câmara dos Deputados",s:"91 de 513 cadeiras",v:91/513},
-    {t:"Senado Federal",s:"16 de 81 cadeiras",v:16/81},
-    {t:"Candidaturas em 2026",s:"7.140 de 20.506 registros",v:0.3482},
-    {t:"Eleitorado",s:"Mulheres que votam",v:0.52}
+    // fontes oficiais, consultadas em 25/09/2026 (links no rodapé)
+    {t:"Câmara dos Deputados",s:"88 de 513 cadeiras",v:88/513},
+    {t:"Senado Federal",s:"15 de 81 cadeiras",v:15/81},
+    {t:"Candidaturas em 2026",s:"7.365 de 20.986 registros",v:7365/20986},
+    {t:"Eleitorado",s:"83,8 milhões de eleitoras",v:0.5281}
   ];
 
   // ---------- dia da eleição: sem novos conteúdos ----------
@@ -450,7 +452,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
 
   // pessoas (hero)
   const dots=$("#dots");
-  for(let i=0;i<100;i++){const d=document.createElement("i");if(i<18){d.className="w";d.style.animationDelay=(i*40)+"ms"}dots.appendChild(d)}
+  for(let i=0;i<100;i++){const d=document.createElement("i");if(i<17){d.className="w";d.style.animationDelay=(i*40)+"ms"}dots.appendChild(d)}
 
   // barras
   $("#bars").innerHTML = BARS.map(b=>`
@@ -708,7 +710,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
     const cs=cargos(state.uf||"SP");
     const escolhidas=cs.filter(c=>state.picks[c.id]);
     if(!escolhidas.length){
-      return `*Só 18% da Câmara dos Deputados é de mulheres.*\n\n`+
+      return `*Só 17% da Câmara dos Deputados é de mulheres.*\n\n`+
         `Em 4 de outubro dá para mudar isso. Monte sua urna só com mulheres em 3 minutos e leve a colinha no dia da votação:\n`+
         `${SITE_URL}`;
     }
