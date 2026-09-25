@@ -71,7 +71,7 @@ test("monta a urna completa e envia a colinha pelo WhatsApp", async ({ page, con
   await expect(page.locator("#slots .digits").first()).toHaveAttribute("aria-label", `número ${fed}`);
 
   const [whatsapp] = await Promise.all([context.waitForEvent("page"), page.locator("#share").click()]);
-  const texto = decodeURIComponent(new URL(whatsapp.url()).searchParams.get("text") || "");
+  const texto = new URL(whatsapp.url()).searchParams.get("text") || "";
   expect(texto).toContain(`*${fed}*`);
   expect(texto).toContain(`*${est}*`);
   expect(texto).toContain("(SP)");
@@ -97,7 +97,8 @@ test("cargo sem mulheres mostra aviso e deixa seguir", async ({ page }) => {
   for (let i = 0; i < 4; i++) await page.locator("#skip").click();
   await expect(page.locator(".step-title")).toHaveText("Governadora");
   await expect(page.locator(".empty")).toHaveText(/Nenhuma mulher concorre a governadora no Espírito Santo/);
-  await expect(page.locator("#next")).toHaveCount(0);
+  await expect(page.locator("#next")).toBeDisabled();
+  await expect(page.locator("#skip")).toHaveText("Próximo cargo");
   await page.locator("#skip").click();
   await expect(page.locator(".step-title")).toHaveText("Presidenta");
 });
@@ -127,4 +128,51 @@ test("assinar o manifesto troca o botão pela confirmação", async ({ page }) =
   await page.locator("#pledge-btn").click();
   await expect(page.locator("#pledge-btn")).toBeHidden();
   await expect(page.locator("#pledge-done")).toBeVisible();
+});
+
+test("voto em branco aparece na colinha e cargo pulado fica de fora", async ({ page, context }) => {
+  await escolherEstado(page, "SP");
+  const fed = await escolherPrimeira(page);
+  // estadual: pula
+  await page.locator("#skip").click();
+  // senado 1: branco, que não tira ninguém da lista do 2º voto
+  await expect(page.locator(".step-title")).toHaveText("Senadora (1º voto)");
+  const senadoras = await page.locator(".cand").count();
+  await page.locator("#branco").click();
+  await expect(page.locator("#branco")).toHaveAttribute("aria-pressed", "true");
+  await page.locator("#next").click();
+  await expect(page.locator(".step-title")).toHaveText("Senadora (2º voto)");
+  await expect(page.locator(".cand")).toHaveCount(senadoras);
+  await page.locator("#skip").click();
+  await page.locator("#skip").click();
+  // presidenta: branco
+  await expect(page.locator(".step-title")).toHaveText("Presidenta");
+  await page.locator("#branco").click();
+  await page.locator("#next").click();
+
+  await expect(page.locator(".step-title")).toHaveText("Sua urna tem 1 mulher.");
+  await expect(page.locator(".step-help", { hasText: "tecla BRANCO" })).toBeVisible();
+  await expect(page.locator('#slots .digits[aria-label="voto em branco"]')).toHaveCount(2);
+
+  const [whatsapp] = await Promise.all([context.waitForEvent("page"), page.locator("#share").click()]);
+  const texto = new URL(whatsapp.url()).searchParams.get("text") || "";
+  expect(texto).toContain(`*${fed}*`);
+  expect(texto).toContain("Presidenta: *BRANCO*");
+  expect(texto).toContain("Senadora (1º voto): *BRANCO*");
+  expect(texto).not.toContain("Deputada estadual");
+  expect(texto).toContain("Minha urna tem 1 mulher");
+});
+
+test("só votos em branco viram convite, não colinha", async ({ page, context }) => {
+  await escolherEstado(page, "AC");
+  for (let i = 0; i < 6; i++) {
+    await page.locator("#branco").click();
+    await page.locator("#next").click();
+  }
+  await expect(page.locator(".step-title")).toHaveText("Sua urna tem 0 mulheres.");
+  await expect(page.locator("#share")).toHaveText("Convidar amigas pelo WhatsApp");
+  const [whatsapp] = await Promise.all([context.waitForEvent("page"), page.locator("#share").click()]);
+  const texto = new URL(whatsapp.url()).searchParams.get("text") || "";
+  expect(texto).toContain("Monte sua urna só com mulheres");
+  expect(texto).not.toContain("BRANCO");
 });
