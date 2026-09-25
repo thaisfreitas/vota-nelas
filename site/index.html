@@ -219,6 +219,7 @@ input[type="search"]{width:100%;min-height:52px;font:500 17px var(--body);paddin
 /* ---------- celular ---------- */
 .show-sm{display:none}
 .back-choose{display:none;color:#fff;justify-self:center}
+.limpar{color:#fff;justify-self:center;opacity:.85}
 .mini{display:none}
 .nav-right{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .know{display:inline-flex;align-items:center;min-height:40px}
@@ -340,6 +341,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
             <button class="btn btn-urna-ok" id="share" type="button">Enviar para 3 amigas no WhatsApp</button>
             <button class="btn btn-urna-w" id="copy" type="button">Copiar colinha</button>
             <div class="copied" id="copied" role="status"></div>
+            <button class="linkbtn limpar" type="button" id="limpar" hidden>Limpar escolhas e recomeçar</button>
             <button class="linkbtn back-choose" type="button" id="back-choose">Voltar para as escolhas</button>
           </div>
         </aside>
@@ -701,6 +703,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
   // colinha
   function renderSlots(){
     updateShareLabel();
+    $("#limpar").hidden = !Object.values(state.picks).some(Boolean);
     $("#uf-lbl").textContent = state.uf ? state.uf : "—";
     const cs = cargos(state.uf||"SP");
     $("#slots").innerHTML = cs.map(c=>{
@@ -748,6 +751,13 @@ footer ul{margin:8px 0 0;padding-left:18px}
     const a=document.createElement("a");a.href=url;a.target="_blank";a.rel="noopener";document.body.appendChild(a);a.click();a.remove();
   }
   $("#share").onclick=share;
+  // recomeçar: apaga as escolhas e volta ao mapa, com o estado já marcado
+  $("#limpar").onclick=()=>{
+    if(!confirm("Apagar todas as escolhas da sua urna e recomeçar?")) return;
+    state.picks={}; state.step=0; ui={q:"",partido:"",page:0}; save();
+    renderPanel(); renderSlots();
+    panel.scrollIntoView({behavior:reduz?"auto":"smooth",block:"start"});
+  };
   $("#back-choose").onclick=()=>panel.scrollIntoView({behavior:reduz?"auto":"smooth",block:"start"});
   if(DIA_ELEICAO){
     $("#share").hidden=true;

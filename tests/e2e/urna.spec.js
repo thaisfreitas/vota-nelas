@@ -180,6 +180,28 @@ test("só votos em branco viram convite, não colinha", async ({ page, context }
   expect(texto).not.toContain("BRANCO");
 });
 
+test("limpar escolhas pede confirmação e recomeça do mapa", async ({ page }) => {
+  await escolherEstado(page, "SP");
+  await expect(page.locator("#limpar")).toBeHidden();
+  const fed = await escolherPrimeira(page);
+  await expect(page.locator("#limpar")).toBeVisible();
+
+  // cancelar mantém tudo como estava
+  page.once("dialog", (d) => d.dismiss());
+  await page.locator("#limpar").click();
+  await expect(page.locator("#slots .digits").first()).toHaveAttribute("aria-label", `número ${fed}`);
+
+  // confirmar apaga as escolhas e volta para o mapa com o estado marcado
+  page.once("dialog", (d) => d.accept());
+  await page.locator("#limpar").click();
+  await expect(page.locator(".step-title")).toHaveText("Onde você vota?");
+  await expect(page.locator("#uf-select")).toHaveValue("SP");
+  await expect(page.locator("#slots .digits").first()).toHaveAttribute("aria-label", "sem escolha");
+  await expect(page.locator("#limpar")).toBeHidden();
+  await page.reload();
+  await expect(page.locator("#slots .digits").first()).toHaveAttribute("aria-label", "sem escolha");
+});
+
 test("não mostra mais a faixa de protótipo", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByText("Protótipo")).toHaveCount(0);
