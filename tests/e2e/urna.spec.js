@@ -179,3 +179,8 @@ test("só votos em branco viram convite, não colinha", async ({ page, context }
   expect(texto).toContain("Monte sua urna só com mulheres");
   expect(texto).not.toContain("BRANCO");
 });
+
+test("não mostra mais a faixa de protótipo", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByText("Protótipo")).toHaveCount(0);
+});
