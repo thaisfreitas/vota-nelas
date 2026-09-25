@@ -279,6 +279,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
     <nav aria-label="Seções">
       <a href="#urna" class="nav-cta"><span class="hide-sm">Monte sua urna</span><span class="show-sm">Montar urna</span></a>
       <a class="hide-sm" href="#dobro">Voto em dobro</a>
+      <a class="hide-sm" href="#pesquisar">Como pesquisar</a>
       <a class="hide-sm" href="#compromisso">Manifesto</a>
     </nav>
   </div>
@@ -371,6 +372,22 @@ footer ul{margin:8px 0 0;padding-left:18px}
       </div>
     </div>
   </section>
+  <section id="pesquisar">
+    <div class="wrap">
+      <p class="eyebrow">Antes de votar</p>
+      <h2 style="margin-top:10px">Como pesquisar uma candidata</h2>
+      <p class="lead" style="margin-top:12px">Em poucos minutos dá para conhecer quem você vai escolher. Estes são os caminhos oficiais, e servem também para quem não está no site.</p>
+      <div class="rules">
+        <div class="rule"><b>Perfil, bens e contas</b><p>No <a href="https://divulgacandcontas.tse.jus.br/" target="_blank" rel="noopener">DivulgaCandContas</a>, do TSE: dados da candidatura, bens declarados, certidões criminais, quem doou para a campanha e como o dinheiro foi gasto. Cada card do site tem o link direto.</p></div>
+        <div class="rule"><b>Quem já é deputada</b><p>Na <a href="https://www.camara.leg.br/deputados/quem-sao" target="_blank" rel="noopener">página da Câmara</a>: projetos que apresentou, presença e votações. No card, "Como votou na Câmara" mostra 5 votações importantes.</p></div>
+        <div class="rule"><b>Quem já é senadora</b><p>Na <a href="https://www25.senado.leg.br/web/senadores/em-exercicio" target="_blank" rel="noopener">página do Senado</a>: mandato, projetos e votações de cada senadora.</p></div>
+        <div class="rule"><b>Proposta de governo</b><p>Candidatas a governadora e presidenta registram no TSE uma proposta de governo. Ela fica na página da candidata no DivulgaCandContas.</p></div>
+        <div class="rule"><b>Avaliações externas</b><p>Organizações da sociedade civil também avaliam a atuação de parlamentares, como o <a href="https://www.elasnocongresso.com.br/ranking" target="_blank" rel="noopener">Elas no Congresso</a> (AzMina) e o <a href="https://confianelas.com/" target="_blank" rel="noopener">ConfiaNelas</a>. São avaliações dessas organizações, não dados oficiais.</p></div>
+        <div class="rule"><b>Quem decide é você</b><p>O Vota Nelas não recomenda nenhuma candidata. Mostra dados oficiais e caminhos para você conhecer cada uma e escolher.</p></div>
+      </div>
+    </div>
+  </section>
+
   <section id="regras" class="band">
     <div class="wrap">
       <p class="eyebrow">Transparência</p>
@@ -571,6 +588,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
       </div>
       <p class="count-lbl" id="count-lbl"></p>`:""}
       <div class="cands" id="cands"></div>
+      <p class="note" style="margin-top:10px"><a href="#pesquisar">Como pesquisar uma candidata antes de votar</a></p>
       ${muitas?`<div id="more-wrap" style="margin-top:14px"><button class="btn btn-ghost" type="button" id="more">Mostrar outras ${POR_VEZ}</button></div>`:""}
       <div class="alt-row">
         <button class="btn btn-ghost" type="button" id="skip">${nenhuma?"Próximo cargo":"Pular este cargo"}</button>
@@ -639,7 +657,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
       return `<li><a href="${esc(v.link)}" target="_blank" rel="noopener">${esc(v.tema)}</a> (${d}/${m}/${a}): <b>${esc(TEXTO_VOTO[c.votos[i]]||c.votos[i])}</b><small>${esc(v.descricao)}</small></li>`;
     }).join("");
     return `<details class="votos"><summary>Como votou na Câmara</summary><ul>${itens}</ul>
-      <p class="fonte">Fonte: votos nominais do Plenário da Câmara dos Deputados. "Não votou": era deputada, mas não há voto registrado. <a href="https://www.camara.leg.br/deputados/${Number(c.camara)}" target="_blank" rel="noopener">Página dela na Câmara ↗</a></p></details>`;
+      <p class="fonte">Fonte: votos nominais do Plenário da Câmara dos Deputados. "Não votou": era deputada, mas não há voto registrado. <a href="https://www.camara.leg.br/deputados/${Number(c.camara)}" target="_blank" rel="noopener">Página dela na Câmara ↗</a> · Avaliação externa (não oficial): <a href="https://www.elasnocongresso.com.br/ranking" target="_blank" rel="noopener">Elas no Congresso ↗</a></p></details>`;
   }
   function semVagaMsg(c,other){
     if(other) return "A única mulher candidata ao Senado no seu estado já está no seu 1º voto. Siga para o próximo cargo.";

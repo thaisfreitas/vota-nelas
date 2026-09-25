@@ -247,3 +247,14 @@ test("candidata que nunca foi deputada não tem o bloco de votos", async ({ page
   await expect(semVotos.first()).toBeVisible();
 });
 
+test("guia de como pesquisar uma candidata, com fontes oficiais e avaliações externas identificadas", async ({ page }) => {
+  await escolherEstado(page, "SP");
+  await page.locator("a", { hasText: "Como pesquisar uma candidata antes de votar" }).click();
+  const guia = page.locator("#pesquisar");
+  await expect(guia).toBeInViewport();
+  await expect(guia.locator('a[href^="https://divulgacandcontas.tse.jus.br"]')).toHaveCount(1);
+  await expect(guia.locator('a[href^="https://www.camara.leg.br"]')).toHaveCount(1);
+  await expect(guia).toContainText("não dados oficiais");
+  await expect(guia).toContainText("não recomenda nenhuma candidata");
+});
+
