@@ -21,7 +21,7 @@ def carregar(nome):
 
 class TestDados(unittest.TestCase):
     def test_existe_um_arquivo_por_estado_e_um_nacional(self):
-        esperados = {f"{uf}.json" for uf in UFS} | {"BR.json"}
+        esperados = {f"{uf}.json" for uf in UFS} | {"BR.json", "votacoes.json"}
         self.assertEqual(set(os.listdir(DADOS)), esperados)
 
     def test_estados_tem_todos_os_cargos(self):
@@ -70,6 +70,29 @@ class TestDados(unittest.TestCase):
         # todos os arquivos precisam vir da mesma extração do TSE
         datas = {carregar(n)["gerado"] for n in [f"{uf}.json" for uf in UFS] + ["BR.json"]}
         self.assertEqual(len(datas), 1, f"arquivos de extrações diferentes: {datas}")
+
+
+    def test_votos_da_camara(self):
+        v = carregar("votacoes.json")
+        self.assertEqual(len(v["votacoes"]), 5)
+        for votacao in v["votacoes"]:
+            self.assertRegex(votacao["data"], r"^\d{4}-\d{2}-\d{2}$")
+            self.assertTrue(votacao["link"].startswith("https://www.camara.leg.br/"))
+            self.assertIn("Sim =", votacao["descricao"])
+        # toda candidata com votos existe nos dados do site, com o mesmo id do TSE
+        sqs = set()
+        for nome in [f"{uf}.json" for uf in UFS] + ["BR.json"]:
+            for cargo, lista in carregar(nome).items():
+                if isinstance(lista, list):
+                    sqs |= {c[3] for c in lista}
+        self.assertGreater(len(v["candidatas"]), 50)
+        validos = {"Sim", "Não", "Abstenção", "Obstrução", "Artigo 17", "Não votou", "—"}
+        for sq, c in v["candidatas"].items():
+            with self.subTest(sq=sq):
+                self.assertIn(sq, sqs)
+                self.assertEqual(len(c["votos"]), 5)
+                self.assertTrue(set(c["votos"]) <= validos, c["votos"])
+                self.assertFalse(all(x in ("Não votou", "—") for x in c["votos"]), "sem nenhum voto registrado")
 
 
 if __name__ == "__main__":

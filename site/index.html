@@ -176,6 +176,11 @@ select{width:100%;min-height:52px;font:500 17px var(--body);padding:0 14px;borde
 input[type="search"]{width:100%;min-height:52px;font:500 17px var(--body);padding:0 14px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
 .count-lbl{font-size:14px;color:var(--muted);margin-top:12px}
 .cand-wrap{display:grid;gap:4px}
+.votos{font-size:14px;background:var(--soft);border-radius:12px;padding:8px 12px}
+.votos summary{cursor:pointer;font-weight:700;color:var(--roxo);min-height:32px;display:flex;align-items:center}
+.votos ul{margin:6px 0 4px;padding-left:18px;display:grid;gap:6px}
+.votos li small{display:block;color:var(--muted)}
+.votos .fonte{color:var(--muted);font-size:12px;margin-top:6px}
 .know{font-size:13px;font-weight:600;padding:2px 4px}
 .empty{color:var(--muted);grid-column:1/-1;padding-block:12px}
 .rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:24px}
@@ -485,16 +490,22 @@ footer ul{margin:8px 0 0;padding-left:18px}
       .catch(e=>{delete DADOS[arq]; throw e});
     return DADOS[arq];
   }
-  const pronto = uf => DADOS[uf] && !DADOS[uf].then && DADOS.BR && !DADOS.BR.then;
+  // votos na Câmara (scripts/votacoes_deputadas.py): opcional, sem ele os cards aparecem sem o bloco
+  let votosCamara = null, votosCarregados = false;
+  const votosPronto = carregar("votacoes").then(d=>{votosCamara=d},()=>{}).finally(()=>{votosCarregados=true});
+  const pronto = uf => DADOS[uf] && !DADOS[uf].then && DADOS.BR && !DADOS.BR.then && votosCarregados;
   function lista(uf,cargo){
     const key = cargo.grupo||cargo.id;
     const arq = key==="pres" ? "BR" : uf;
     const ck = arq+key;
     if(cache[ck]) return cache[ck];
     const d = DADOS[arq], rv = rng(VISITA+ck);
-    return cache[ck] = (d[key]||[])
-      .map(([nome,num,partido,sq])=>({id:sq,nome,num,partido,link:linkTSE(arq,sq)}))
+    const out = (d[key]||[])
+      .map(([nome,num,partido,sq])=>({id:sq,nome,num,partido,link:linkTSE(arq,sq),camara:votosCamara&&votosCamara.candidatas[sq]}))
       .map(x=>[rv(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+    // só guarda depois que os votos da Câmara chegaram, para o card não ficar sem eles
+    if(votosCarregados) cache[ck]=out;
+    return out;
   }
   // página da candidata no DivulgaCandContas: #/candidato/{região}/{UF}/{eleição}/{SQ_CANDIDATO}/{ano}/{UE}
   // 20322002026 é o código da Eleição Geral 2026 no DivulgaCand (diferente do CD_ELEICAO dos dados abertos)
@@ -535,7 +546,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
         <h3 class="step-title">${c.nome}</h3><p class="step-help" id="loading">Carregando as candidatas…</p>`;
       const uf=state.uf;
       // espera os dois pedidos terminarem: assim "Tentar de novo" nunca reaproveita um pedido que ainda vai falhar
-      Promise.allSettled([carregar(uf),carregar("BR")]).then(r=>{
+      Promise.allSettled([carregar(uf),carregar("BR"),votosPronto]).then(r=>{
         if(r.every(x=>x.status==="fulfilled")){ if(state.uf===uf){ limparPicks(); renderPanel(); renderSlots(); } return; }
         const l=$("#loading"); if(!l) return;
         l.innerHTML='Não foi possível carregar as candidatas. Confira sua internet. <button class="linkbtn" type="button" id="retry">Tentar de novo</button>';
@@ -597,6 +608,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
             <span><span class="nm">${esc(x.nome)}</span><br><span class="meta">${esc(x.partido)}</span><br><span class="num">${esc(x.num)}</span></span>
           </button>
           <a class="know" href="${esc(x.link)}" target="_blank" rel="noopener">Conhecer no site do TSE ↗</a>
+          ${x.camara?blocoVotos(x.camara):""}
         </div>`).join("") : nenhuma ? `<p class="empty">${semVagaMsg(c,other)}</p>`
         : `<p class="empty">Nenhuma candidata encontrada. Confira o nome ou o número, ou limpe os filtros.</p>`;
       panel.querySelectorAll(".cand").forEach(b=>b.onclick=()=>{
@@ -620,6 +632,15 @@ footer ul{margin:8px 0 0;padding-left:18px}
   }
 
   let lastMapFocus=false;
+  const TEXTO_VOTO = {"Sim":"Votou Sim","Não":"Votou Não","—":"Não era deputada"};
+  function blocoVotos(c){
+    const itens = votosCamara.votacoes.map((v,i)=>{
+      const [a,m,d] = v.data.split("-");
+      return `<li><a href="${esc(v.link)}" target="_blank" rel="noopener">${esc(v.tema)}</a> (${d}/${m}/${a}): <b>${esc(TEXTO_VOTO[c.votos[i]]||c.votos[i])}</b><small>${esc(v.descricao)}</small></li>`;
+    }).join("");
+    return `<details class="votos"><summary>Como votou na Câmara</summary><ul>${itens}</ul>
+      <p class="fonte">Fonte: votos nominais do Plenário da Câmara dos Deputados. "Não votou": era deputada, mas não há voto registrado. <a href="https://www.camara.leg.br/deputados/${Number(c.camara)}" target="_blank" rel="noopener">Página dela na Câmara ↗</a></p></details>`;
+  }
   function semVagaMsg(c,other){
     if(other) return "A única mulher candidata ao Senado no seu estado já está no seu 1º voto. Siga para o próximo cargo.";
     const onde = c.id==="pres" ? "no Brasil" : emUF(state.uf);

@@ -225,3 +225,25 @@ test("cargo pulado fica fora da colinha e da mensagem", async ({ page, context }
   expect(texto).not.toContain("Deputada estadual");
   expect(texto).not.toContain("Presidenta");
 });
+
+test("card de quem já foi deputada mostra como ela votou na Câmara", async ({ page }) => {
+  await escolherEstado(page, "SP");
+  await page.locator("#q").fill("tabata");
+  const card = page.locator(".cand-wrap", { hasText: "Tabata Amaral" });
+  await expect(card).toHaveCount(1);
+  const votos = card.locator("details.votos");
+  // fechado por padrão: o card continua curto
+  await expect(votos.locator("li").first()).toBeHidden();
+  await votos.locator("summary").click();
+  await expect(votos.locator("li")).toHaveCount(5);
+  await expect(votos.locator("li").first()).toBeVisible();
+  await expect(votos).toContainText("PEC 6x1 (27/05/2026): Votou Sim");
+  await expect(votos.locator("a", { hasText: "Página dela na Câmara" })).toHaveAttribute("href", /camara\.leg\.br\/deputados\/\d+$/);
+});
+
+test("candidata que nunca foi deputada não tem o bloco de votos", async ({ page }) => {
+  await escolherEstado(page, "SP");
+  const semVotos = page.locator(".cand-wrap:not(:has(details.votos))");
+  await expect(semVotos.first()).toBeVisible();
+});
+
