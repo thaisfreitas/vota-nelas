@@ -29,6 +29,8 @@
   --vinho:#A3123F; --vinho-ink:#FFFFFF; --roxo:#5B2A86; --roxo-soft:#EDE3F6;
   --men:#CDBFCB; --ok:#1F7A4D; --confirma:#1E8A4C; --confirma-ink:#FFFFFF; --map:#EBDDEA; --map-hover:#D9C3DC;
   --urna:#1E2A24; --urna-screen:#D9E6C7; --urna-ink:#1B2A17;
+  --hm0:#B42318; --hm0-ink:#FFFFFF; --hm1:#F6C3B8; --hm1-ink:#4A1410; --hm2:#ECE4EA; --hm2-ink:#2B1330;
+  --hm3:#B5DEC4; --hm3-ink:#0F3B24; --hm4:#1F7A4D; --hm4-ink:#FFFFFF;
   --display:"Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
   --body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono:"Share Tech Mono", ui-monospace, "Courier New", monospace;
@@ -41,6 +43,8 @@
     --vinho:#F0527F; --vinho-ink:#1A0F1C; --roxo:#C39BEA; --roxo-soft:#34223F;
     --men:#56435A; --ok:#5CCB91; --confirma:#3DBE74; --confirma-ink:#10210F; --map:#3B2640; --map-hover:#54385B;
     --urna:#0F1512; --urna-screen:#C8D8B3; --urna-ink:#15220F;
+    --hm0:#F0766B; --hm0-ink:#1A0F1C; --hm1:#8A3A36; --hm1-ink:#FDECE8; --hm2:#4A3A4D; --hm2-ink:#F6ECF4;
+    --hm3:#2A6B4A; --hm3-ink:#E6F8EE; --hm4:#5CCB91; --hm4-ink:#10210F;
   }
 }
 :root[data-theme="dark"]{
@@ -50,6 +54,8 @@
   --vinho:#F0527F; --vinho-ink:#1A0F1C; --roxo:#C39BEA; --roxo-soft:#34223F;
   --men:#56435A; --ok:#5CCB91; --confirma:#3DBE74; --confirma-ink:#10210F; --map:#3B2640; --map-hover:#54385B;
   --urna:#0F1512; --urna-screen:#C8D8B3; --urna-ink:#15220F;
+  --hm0:#F0766B; --hm0-ink:#1A0F1C; --hm1:#8A3A36; --hm1-ink:#FDECE8; --hm2:#4A3A4D; --hm2-ink:#F6ECF4;
+  --hm3:#2A6B4A; --hm3-ink:#E6F8EE; --hm4:#5CCB91; --hm4-ink:#10210F;
 }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.55}
@@ -70,7 +76,8 @@ p{margin:0}
 .logo .dot{width:22px;height:22px;border-radius:50%;background:var(--vinho);display:inline-grid;place-items:center;color:var(--vinho-ink);font-size:13px}
 .logo em{font-style:normal;color:var(--vinho)}
 .top nav{display:flex;gap:18px;font-size:15px;font-weight:600}
-.top nav a{color:var(--ink);text-decoration:none}
+.top nav a{color:var(--ink);text-decoration:none;white-space:nowrap}
+@media (max-width:900px){.top nav .hide-md{display:none}}
 .top nav a:hover{color:var(--vinho)}
 @media (max-width:640px){.top nav .hide-sm{display:none}}
 
@@ -127,6 +134,56 @@ section{padding-block:56px}
 .track .half{position:absolute;left:50%;top:-4px;bottom:-4px;border-left:2px dashed var(--ink);opacity:.5}
 .pct{font-family:var(--display);font-weight:800;font-size:26px;text-align:right;font-variant-numeric:tabular-nums}
 .half-lbl{font-size:13px;color:var(--muted);margin-top:10px}
+
+/* causas: mapa de calor dos partidos */
+.causas{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:24px;padding:0;list-style:none}
+.causas li{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:15px;color:var(--muted)}
+.causas li b{display:block;color:var(--ink);font-size:16px}
+.causas .dir{display:inline-block;margin-top:6px;font-size:13px;font-weight:700;color:var(--hm4-ink);background:var(--hm4);border-radius:99px;padding:2px 10px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.hm-box{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px;margin-top:24px;position:relative}
+.hm-box h3{font-size:20px}
+.hm-box .sub{font-size:15px;color:var(--muted);margin-top:4px}
+.hm-legend{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.hm-legend .sc{display:flex;gap:2px}
+.hm-legend .sc i{width:34px;height:14px;display:block;border-radius:3px}
+table.hm{width:100%;border-collapse:separate;border-spacing:2px;margin-top:16px;table-layout:fixed;font-variant-numeric:tabular-nums}
+.hm th{font:600 13px/1.2 var(--body);color:var(--muted);text-align:center;padding:4px 2px;vertical-align:bottom}
+.hm th.p{text-align:left;width:128px}
+.hm th.tot{color:var(--ink)}
+.hm tbody th{font:700 15px/1.2 var(--body);color:var(--ink);text-align:left;padding:0 8px 0 0;vertical-align:middle;hyphens:manual}
+.hm tbody th small{display:block;font:500 12px var(--body);color:var(--muted)}
+.hm td{height:40px;border-radius:4px;text-align:center;font:600 14px var(--body);cursor:default}
+.hm td.tot{font:800 16px var(--display)}
+.hm td.gap,.hm th.gap{width:8px;background:none;padding:0}
+.hm td.na{background:transparent;color:var(--muted);box-shadow:inset 0 0 0 1px var(--line)}
+.hm td:focus-visible{outline:3px solid var(--roxo);outline-offset:1px}
+.hm .c0{background:var(--hm0);color:var(--hm0-ink)} .hm .c1{background:var(--hm1);color:var(--hm1-ink)}
+.hm .c2{background:var(--hm2);color:var(--hm2-ink)} .hm .c3{background:var(--hm3);color:var(--hm3-ink)}
+.hm .c4{background:var(--hm4);color:var(--hm4-ink)}
+.hm-tip{position:absolute;z-index:4;pointer-events:none;background:var(--ink);color:var(--bg);font-size:14px;line-height:1.35;padding:8px 10px;border-radius:10px;max-width:240px;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.hm-tip b{display:block}
+.hm-cta{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;margin-top:24px;background:var(--roxo-soft);border-radius:16px;padding:18px 20px}
+.hm-cta p{font-size:17px}
+@media (max-width:640px){
+  .hm-box{padding:14px 10px;margin-inline:-6px}
+  .hm th{font-size:11px;padding:2px 0;hyphens:manual}
+  .hm th.p{width:84px}
+  .hm tbody th{font-size:12px;padding-right:4px}
+  .hm td{height:36px;font-size:12px}
+  .hm td.tot{font-size:14px}
+  .hm td.gap,.hm th.gap{width:3px}
+  .hm .pc{display:none}
+  .hm-cta{grid-template-columns:1fr}
+}
+.votos summary{flex-wrap:wrap;gap:2px 8px}
+.pl{font-size:13px;font-weight:700;border-radius:99px;padding:1px 9px}
+.pl.c0{background:var(--hm0);color:var(--hm0-ink)} .pl.c1{background:var(--hm1);color:var(--hm1-ink)}
+.pl.c2{background:var(--hm2);color:var(--hm2-ink)} .pl.c3{background:var(--hm3);color:var(--hm3-ink)}
+.pl.c4{background:var(--hm4);color:var(--hm4-ink)}
+.alin{font-size:13px;color:var(--muted);padding:2px 4px;display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center}
+.votos .fav{font-weight:700;color:var(--ok)}
+.votos .con{font-weight:700;color:var(--vinho)}
 
 /* urna builder */
 .builder{display:grid;grid-template-columns:1fr 360px;gap:32px;margin-top:32px;align-items:start}
@@ -280,6 +337,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
     <a class="logo" href="#inicio"><span class="dot" aria-hidden="true">✓</span>Vota <em>Nelas</em></a>
     <nav aria-label="Seções">
       <a href="#urna" class="nav-cta"><span class="hide-sm">Monte sua urna</span><span class="show-sm">Montar urna</span></a>
+      <a class="hide-sm hide-md" href="#causas">A favor delas</a>
       <a class="hide-sm" href="#dobro">Voto em dobro</a>
       <a class="hide-sm" href="#pesquisar">Como pesquisar</a>
       <a class="hide-sm" href="#compromisso">Manifesto</a>
@@ -328,11 +386,38 @@ footer ul{margin:8px 0 0;padding-left:18px}
     </div>
   </section>
 
+  <section id="causas">
+    <div class="wrap">
+      <p class="eyebrow">Antes de escolher</p>
+      <h2 style="margin-top:10px">Mais mulheres, sim. E que votem a favor das mulheres.</h2>
+      <p class="lead" style="margin-top:12px">O Vota Nelas é suprapartidário, mas não é neutro sobre direitos. Eleger mais mulheres só muda a nossa vida quando elas votam a favor das mulheres, das minorias e da sociedade. Veja como cada partido votou na Câmara em 5 votações que mexem com o nosso dia a dia.</p>
+      <ul class="causas" aria-label="O que é votar a favor em cada votação">
+        <li><b>PEC 6x1</b>Fim da escala de 6 dias de trabalho para 1 de folga. As mulheres somam o emprego ao trabalho de cuidado em casa.<br><span class="dir">A favor = Sim</span></li>
+        <li><b>Igualdade salarial</b>Mesmo salário para mulheres e homens que fazem o mesmo trabalho.<br><span class="dir">A favor = Sim</span></li>
+        <li><b>Misoginia</b>Urgência para votar a criminalização do ódio contra as mulheres.<br><span class="dir">A favor = Sim</span></li>
+        <li><b>PL do Veneno</b>Liberação de mais agrotóxicos na comida, com menos controle.<br><span class="dir">A favor = Não</span></li>
+        <li><b>PL da Devastação</b>Menos fiscalização ambiental para grandes obras, que atingem primeiro as comunidades mais pobres.<br><span class="dir">A favor = Não</span></li>
+      </ul>
+      <div class="hm-box" id="hm-box" hidden>
+        <h3>Quanto cada partido votou a favor das mulheres</h3>
+        <p class="sub">De cada 100 votos da bancada na Câmara, quantos foram a favor. Partidos do mais a favor ao mais contra.</p>
+        <div class="hm-legend" aria-hidden="true"><span>Contra</span><span class="sc"><i style="background:var(--hm0)"></i><i style="background:var(--hm1)"></i><i style="background:var(--hm2)"></i><i style="background:var(--hm3)"></i><i style="background:var(--hm4)"></i></span><span>A favor</span><span>(faixas de 0–19%, 20–39%, 40–59%, 60–79% e 80–100%)</span></div>
+        <div id="hm"></div>
+        <div class="hm-tip" id="hm-tip" role="tooltip" hidden></div>
+        <p class="note" id="hm-note"></p>
+      </div>
+      <div class="hm-cta">
+        <p><b>Na hora de escolher, olhe o card.</b> Quem já foi deputada mostra, em "Como votou na Câmara", quantas vezes votou a favor das mulheres. Dentro de um mesmo partido há quem vote diferente.</p>
+        <a class="btn btn-primary" href="#urna">Escolher minhas candidatas</a>
+      </div>
+    </div>
+  </section>
+
   <section id="urna" class="band">
     <div class="wrap">
       <p class="eyebrow">Monte sua urna com elas</p>
       <h2 style="margin-top:10px">Escolha uma mulher em cada cargo que quiser</h2>
-      <p class="lead" style="margin-top:12px">Siga a mesma ordem da urna. No final, você recebe sua colinha pronta. Pode levar a colinha em papel para a cabine; o celular não entra.</p>
+      <p class="lead" style="margin-top:12px">Siga a mesma ordem da urna. As candidatas aparecem em ordem de votação a favor das causas das mulheres: primeiro quem mais votou a favor na Câmara e, para quem não tem votos lá, a bancada do partido. No final, você recebe sua colinha pronta. Pode levar a colinha em papel para a cabine; o celular não entra.</p>
 
       <div class="builder">
         <div class="panel" id="panel" aria-live="polite"></div>
@@ -385,7 +470,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
         <div class="rule"><b>Quem já é senadora</b><p>Na <a href="https://www25.senado.leg.br/web/senadores/em-exercicio" target="_blank" rel="noopener">página do Senado</a>: mandato, projetos e votações de cada senadora.</p></div>
         <div class="rule"><b>Proposta de governo</b><p>Candidatas a governadora e presidenta registram no TSE uma proposta de governo. Ela fica na página da candidata no DivulgaCandContas.</p></div>
         <div class="rule"><b>Avaliações externas</b><p>Organizações da sociedade civil também avaliam a atuação de parlamentares, como o <a href="https://www.elasnocongresso.com.br/ranking" target="_blank" rel="noopener">Elas no Congresso</a> (AzMina) e o <a href="https://confianelas.com/" target="_blank" rel="noopener">ConfiaNelas</a>. São avaliações dessas organizações, não dados oficiais.</p></div>
-        <div class="rule"><b>Quem decide é você</b><p>O Vota Nelas não recomenda nenhuma candidata. Mostra dados oficiais e caminhos para você conhecer cada uma e escolher.</p></div>
+        <div class="rule"><b>Quem decide é você</b><p>O Vota Nelas não recomenda nenhuma candidata. Mostra dados oficiais, como os votos na Câmara, e caminhos para você conhecer cada uma e escolher quem vota a favor das mulheres.</p></div>
       </div>
     </div>
   </section>
@@ -395,7 +480,8 @@ footer ul{margin:8px 0 0;padding-left:18px}
       <p class="eyebrow">Transparência</p>
       <h2 style="margin-top:10px">Regras que este site segue</h2>
       <div class="rules">
-        <div class="rule"><b>Todas, do mesmo jeito</b><p>Mostramos todas as candidatas aptas, de todos os partidos, em ordem sorteada a cada visita e no mesmo formato.</p></div>
+        <div class="rule"><b>Em ordem de votação a favor das mulheres</b><p>Mostramos todas as candidatas aptas, de todos os partidos, no mesmo formato, em ordem de votação a favor das causas das mulheres na Câmara: primeiro quem mais votou a favor (os votos dela ou, se não tiver, os da bancada do partido). Só os empates aparecem em ordem sorteada.</p></div>
+        <div class="rule"><b>Suprapartidário, não neutro</b><p>Não fazemos campanha para partido nem candidata. Mas defendemos as causas das mulheres e da sociedade e mostramos, com os votos oficiais da Câmara, quem vota a favor delas.</p></div>
         <div class="rule"><b>Só dados oficiais</b><p>Nomes, números e partidos vêm do TSE. Não usamos imagens criadas ou alteradas por inteligência artificial.</p></div>
         <div class="rule"><b>Sem dinheiro de campanha</b><p>Não recebemos recursos de candidatas nem de partidos e não pagamos anúncios ou impulsionamento.</p></div>
         <div class="rule"><b>Sem disparo em massa</b><p>O site não envia mensagens. Você decide se quer compartilhar sua colinha e com quem.</p></div>
@@ -410,7 +496,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
   <div class="wrap cols">
     <div>
       <p><b style="color:var(--ink)">Vota Nelas</b> é uma iniciativa pessoal e suprapartidária de Thais Freitas. Contato: <span style="user-select:all">thaisfreitas31@gmail.com</span>.</p>
-      <p style="margin-top:10px">Não recomendamos nenhuma candidata específica: todas as mulheres aptas aparecem, em ordem aleatória e no mesmo formato.</p>
+      <p style="margin-top:10px">Não recomendamos nenhuma candidata específica: todas as mulheres aptas aparecem no mesmo formato, em ordem de votação a favor das causas das mulheres na Câmara.</p>
       <p style="margin-top:10px">Quer ver a lista completa de candidatas do seu estado? Acesse o <a href="https://confianelas.com/" target="_blank" rel="noopener">ConfiaNelas</a>.</p>
     </div>
     <div>
@@ -499,7 +585,8 @@ footer ul{margin:8px 0 0;padding-left:18px}
     ];
   }
   // ---------- candidatas (dados do TSE, gerados por scripts/tse_para_json.py) ----------
-  // ordem sorteada a cada visita: ninguém aparece sempre primeiro
+  // ordem: primeiro quem mais votou a favor das mulheres (os votos dela na Câmara ou, se nunca foi
+  // deputada, os da bancada do partido); empates em ordem sorteada a cada visita
   const VISITA = String(Math.random());
   const DADOS = {}, cache = {};
   function carregar(arq){
@@ -511,7 +598,47 @@ footer ul{margin:8px 0 0;padding-left:18px}
   }
   // votos na Câmara (scripts/votacoes_deputadas.py): opcional, sem ele os cards aparecem sem o bloco
   let votosCamara = null, votosCarregados = false;
-  const votosPronto = carregar("votacoes").then(d=>{votosCamara=d},()=>{}).finally(()=>{votosCarregados=true});
+  const votosPronto = carregar("votacoes").then(d=>{votosCamara=d;mapaPartidos(d)},()=>{}).finally(()=>{votosCarregados=true});
+  // mapa de calor: quanto cada bancada votou a favor das mulheres (sem os dados, a seção fica só com o texto)
+  // rótulos curtos, com hífen opcional (&shy;) para caber nas colunas estreitas do celular
+  const CURTO = {"PEC 6x1":"6x1","Igualdade Salarial":"Salário igual","Misoginia (urgência)":"Miso&shy;ginia","PL do Veneno":"Vene&shy;no","PL da Devastação":"Devas&shy;tação"};
+  const SIGLA = {"REPUBLICANOS":"REPUBLI&shy;CANOS","SOLIDARIEDADE":"SOLIDA&shy;RIEDADE","CIDADANIA":"CIDA&shy;DANIA"};
+  function mapaPartidos(d){
+    if(!d.partidos||!d.partidos.length) return;
+    const pct = (a,n) => Math.round(100*a/n);
+    const cel = (a,n,rot,cls="") => n
+      ? `<td class="c${faixa(a/n)} ${cls}" tabindex="0" data-tip="${esc(rot)}|${a} de ${n} votos a favor (${pct(a,n)}%)" aria-label="${esc(rot)}: ${pct(a,n)}% a favor, ${a} de ${n} votos">${pct(a,n)}<span class="pc">%</span></td>`
+      : `<td class="na ${cls}" tabindex="0" data-tip="${esc(rot)}|Sem deputados do partido nesta votação" aria-label="${esc(rot)}: sem deputados nesta votação">—</td>`;
+    const linhas = d.partidos.map(p=>{
+      const a = p.votos.reduce((s,x)=>s+x[0],0), n = p.votos.reduce((s,x)=>s+x[1],0);
+      return `<tr><th scope="row">${SIGLA[p.sigla]||esc(p.sigla)}${n<15?`<small>${n} ${n===1?"voto":"votos"}</small>`:""}</th>
+        ${cel(a,n,`${p.sigla} · total`,"tot")}<td class="gap" aria-hidden="true"></td>
+        ${p.votos.map(([a,n],i)=>cel(a,n,`${p.sigla} · ${d.votacoes[i].tema}`)).join("")}</tr>`;
+    }).join("");
+    $("#hm").innerHTML = `<table class="hm"><caption class="sr-only">Porcentagem de votos a favor das mulheres de cada partido, no total e em cada votação</caption>
+      <thead><tr><th class="p" scope="col">Partido</th><th class="tot" scope="col">Total</th><th class="gap" aria-hidden="true"></th>
+      ${d.votacoes.map(v=>`<th scope="col" title="${esc(v.tema)}">${CURTO[v.tema]||esc(v.tema)}</th>`).join("")}</tr></thead><tbody>${linhas}</tbody></table>`;
+    $("#hm-note").innerHTML = `Fonte: votos nominais do Plenário da Câmara dos Deputados (dados abertos), com o partido de cada deputada ou deputado no dia da votação. Obstrução conta como voto contra o projeto; ausências e abstenções ficam de fora. Partidos que se fundiram aparecem com a sigla de hoje (DEM e PSL no UNIÃO, PTB e Patriota no PRD, PROS no Solidariedade, PSC no Podemos). Com poucos votos, a porcentagem muda muito com um voto só.${d.sem_deputados&&d.sem_deputados.length?` Sem deputados nessas votações: ${d.sem_deputados.map(esc).join(", ")}.`:""}`;
+    $("#hm-box").hidden = false;
+    const box=$("#hm-box"), tip=$("#hm-tip");
+    function mostra(td){
+      const [t,x]=td.dataset.tip.split("|");
+      tip.innerHTML=`<b>${t}</b>${x}`; tip.hidden=false;
+      const r=td.getBoundingClientRect(), b=box.getBoundingClientRect();
+      const w=tip.offsetWidth, left=Math.max(4,Math.min(b.width-w-4,r.left-b.left+r.width/2-w/2));
+      tip.style.left=left+"px"; tip.style.top=(r.top-b.top-tip.offsetHeight-6)+"px";
+    }
+    const esconde=()=>{tip.hidden=true};
+    // o toque não dispara pointerleave: rolar a página esconde o detalhe (menos quando a célula está com o foco do teclado)
+    addEventListener("scroll",()=>{ if(!box.contains(document.activeElement)) esconde(); },{passive:true});
+    box.querySelectorAll("td[data-tip]").forEach(td=>{
+      td.addEventListener("pointerenter",()=>mostra(td));
+      td.addEventListener("focus",()=>mostra(td));
+      td.addEventListener("click",()=>mostra(td));
+      td.addEventListener("pointerleave",esconde);
+      td.addEventListener("blur",esconde);
+    });
+  }
   const pronto = uf => DADOS[uf] && !DADOS[uf].then && DADOS.BR && !DADOS.BR.then && votosCarregados;
   function lista(uf,cargo){
     const key = cargo.grupo||cargo.id;
@@ -520,8 +647,13 @@ footer ul{margin:8px 0 0;padding-left:18px}
     if(cache[ck]) return cache[ck];
     const d = DADOS[arq], rv = rng(VISITA+ck);
     const out = (d[key]||[])
-      .map(([nome,num,partido,sq,foto])=>({id:sq,nome,num,partido,foto:!!foto,link:linkTSE(arq,sq),camara:votosCamara&&votosCamara.candidatas[sq]}))
-      .map(x=>[rv(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+      .map(([nome,num,partido,sq,foto])=>{
+        const x = {id:sq,nome,num,partido,foto:!!foto,link:linkTSE(arq,sq),camara:votosCamara&&votosCamara.candidatas[sq]};
+        x.alin = alinhamento(x);
+        return x;
+      })
+      .map(x=>[x.alin?x.alin.r:-1, x.alin&&x.alin.propria?1:0, rv(), x])
+      .sort((a,b)=>b[0]-a[0]||b[1]-a[1]||a[2]-b[2]).map(x=>x[3]);
     // só guarda depois que os votos da Câmara chegaram, para o card não ficar sem eles
     if(votosCarregados) cache[ck]=out;
     return out;
@@ -618,7 +750,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
         show=f.slice(ui.page*POR_VEZ,ui.page*POR_VEZ+POR_VEZ);
         const picked=list.find(x=>x.id===sel);
         if(picked&&!show.includes(picked)&&!ui.q&&!ui.partido) show=[picked,...show.slice(0,POR_VEZ-1)];
-        $("#count-lbl").textContent = f.length ? `${f.length} candidatas${ui.q||ui.partido?" encontradas":" neste cargo"} · mostrando ${show.length} por vez, em ordem sorteada` : "";
+        $("#count-lbl").textContent = f.length ? `${f.length} candidatas${ui.q||ui.partido?" encontradas":" neste cargo"} · mostrando ${show.length} por vez, em ordem de votação a favor das mulheres` : "";
         $("#more-wrap").hidden = f.length<=POR_VEZ;
       }
       $("#cands").innerHTML = show.length ? show.map(x=>`
@@ -628,7 +760,7 @@ footer ul{margin:8px 0 0;padding-left:18px}
             <span><span class="nm">${esc(x.nome)}</span><br><span class="meta">${esc(x.partido)}</span><br><span class="num">${esc(x.num)}</span></span>
           </button>
           <a class="know" href="${esc(x.link)}" target="_blank" rel="noopener">Conhecer no site do TSE ↗</a>
-          ${x.camara?blocoVotos(x.camara):""}
+          ${x.camara?blocoVotos(x.camara):""}${linhaAlinhamento(x)}
         </div>`).join("") : nenhuma ? `<p class="empty">${semVagaMsg(c,other)}</p>`
         : `<p class="empty">Nenhuma candidata encontrada. Confira o nome ou o número, ou limpe os filtros.</p>`;
       panel.querySelectorAll(".cand").forEach(b=>b.onclick=()=>{
@@ -653,12 +785,49 @@ footer ul{margin:8px 0 0;padding-left:18px}
 
   let lastMapFocus=false;
   const TEXTO_VOTO = {"Sim":"Votou Sim","Não":"Votou Não","—":"Não era deputada"};
+  // mesma regra de scripts/votacoes_deputadas.py: obstrução conta como Não; ausência e abstenção ficam fora
+  const CONTA_COMO = {"Sim":"Sim","Não":"Não","Obstrução":"Não"};
+  const aFavor = (v,voto) => CONTA_COMO[voto] ? CONTA_COMO[voto]===v.favoravel : null;
+  const faixa = r => Math.min(4,Math.floor(r*5));
+  function placarCandidata(c){
+    let fav=0, tot=0;
+    votosCamara.votacoes.forEach((v,i)=>{ const f=aFavor(v,c.votos[i]); if(f!==null){tot++;fav+=f} });
+    return {fav,tot};
+  }
+  let totalPartido = null;
+  function placarPartido(sigla){
+    if(!totalPartido){
+      totalPartido = {};
+      for(const p of (votosCamara&&votosCamara.partidos)||[]){
+        const a=p.votos.reduce((s,x)=>s+x[0],0), n=p.votos.reduce((s,x)=>s+x[1],0);
+        totalPartido[p.sigla] = {fav:a,tot:n};
+      }
+    }
+    return totalPartido[sigla];
+  }
+  // quanto a candidata vota a favor das mulheres: os votos dela, ou os da bancada do partido
+  function alinhamento(x){
+    if(!votosCamara) return null;
+    if(x.camara){ const {fav,tot}=placarCandidata(x.camara); if(tot) return {r:fav/tot,propria:true,fav,tot}; }
+    const p = placarPartido(x.partido);
+    return p && p.tot ? {r:p.fav/p.tot,propria:false,fav:p.fav,tot:p.tot} : null;
+  }
+  function linhaAlinhamento(x){
+    if(!votosCamara || (x.alin&&x.alin.propria)) return "";
+    // "sem votos dela" e não "nunca foi deputada": pode ter sido antes de 2019 ou não ter votado nessas 5
+    if(!x.alin) return `<p class="alin">Sem votos dela nessas votações. Partido sem deputados nelas.</p>`;
+    return `<p class="alin">Sem votos dela nessas votações. Bancada do ${esc(x.partido)} na Câmara: <span class="pl c${faixa(x.alin.r)}">${Math.round(x.alin.r*100)}% a favor das mulheres</span></p>`;
+  }
   function blocoVotos(c){
+    const {fav,tot} = placarCandidata(c);
     const itens = votosCamara.votacoes.map((v,i)=>{
       const [a,m,d] = v.data.split("-");
-      return `<li><a href="${esc(v.link)}" target="_blank" rel="noopener">${esc(v.tema)}</a> (${d}/${m}/${a}): <b>${esc(TEXTO_VOTO[c.votos[i]]||c.votos[i])}</b><small>${esc(v.descricao)}</small></li>`;
+      const f = aFavor(v,c.votos[i]);
+      const sel = f===null ? "" : f ? ` <span class="fav">✓ a favor</span>` : ` <span class="con">✗ contra</span>`;
+      return `<li><a href="${esc(v.link)}" target="_blank" rel="noopener">${esc(v.tema)}</a> (${d}/${m}/${a}): <b>${esc(TEXTO_VOTO[c.votos[i]]||c.votos[i])}</b>${sel}<small>${esc(v.descricao)}</small></li>`;
     }).join("");
-    return `<details class="votos"><summary>Como votou na Câmara</summary><ul>${itens}</ul>
+    const placar = tot ? `<span class="pl c${faixa(fav/tot)}">a favor das mulheres em ${fav} de ${tot}</span>` : "";
+    return `<details class="votos"><summary>Como votou na Câmara${placar}</summary><ul>${itens}</ul>
       <p class="fonte">Fonte: votos nominais do Plenário da Câmara dos Deputados. "Não votou": era deputada, mas não há voto registrado. <a href="https://www.camara.leg.br/deputados/${Number(c.camara)}" target="_blank" rel="noopener">Página dela na Câmara ↗</a> · Avaliação externa (não oficial): <a href="https://www.elasnocongresso.com.br/ranking" target="_blank" rel="noopener">Elas no Congresso ↗</a></p></details>`;
   }
   function semVagaMsg(c,other){

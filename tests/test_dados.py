@@ -98,6 +98,32 @@ class TestDados(unittest.TestCase):
                 self.assertTrue(set(c["votos"]) <= validos, c["votos"])
                 self.assertFalse(all(x in ("Não votou", "—") for x in c["votos"]), "sem nenhum voto registrado")
 
+    def test_votos_dos_partidos(self):
+        v = carregar("votacoes.json")
+        # o sentido "a favor das mulheres" de cada votação é explícito: Sim nas 3 primeiras, Não no Veneno e na Devastação
+        self.assertEqual([x["favoravel"] for x in v["votacoes"]], ["Sim", "Sim", "Sim", "Não", "Não"])
+        partidos_2026 = set()
+        for nome in [f"{uf}.json" for uf in UFS] + ["BR.json"]:
+            for lista in carregar(nome).values():
+                if isinstance(lista, list):
+                    partidos_2026 |= {c[2] for c in lista}
+        siglas = [p["sigla"] for p in v["partidos"]]
+        self.assertGreater(len(siglas), 10)
+        self.assertEqual(len(siglas), len(set(siglas)), "partido repetido")
+        # só siglas de 2026 (partidos que se fundiram já entram no sucessor) e nenhum partido some
+        self.assertTrue(set(siglas) <= partidos_2026, set(siglas) - partidos_2026)
+        self.assertEqual(set(siglas) | set(v["sem_deputados"]), partidos_2026)
+        total = []
+        for p in v["partidos"]:
+            with self.subTest(partido=p["sigla"]):
+                self.assertEqual(len(p["votos"]), 5)
+                for a, n in p["votos"]:
+                    self.assertTrue(0 <= a <= n)
+                n = sum(n for _, n in p["votos"])
+                self.assertGreater(n, 0)
+                total.append(sum(a for a, _ in p["votos"]) / n)
+        self.assertEqual(total, sorted(total, reverse=True), "partidos fora da ordem do mais a favor ao mais contra")
+
 
 if __name__ == "__main__":
     unittest.main()

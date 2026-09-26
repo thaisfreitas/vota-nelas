@@ -7,7 +7,8 @@ Uso:
 
 Fontes oficiais: votos nominais do Plenário (API de dados abertos da Câmara) e
 candidaturas aptas do TSE. Gera site/dados/votacoes.json (usado no card de cada
-candidata) e, para consulta, docs/votacoes-deputadas/votacoes.csv e tabela.md.
+candidata e no mapa de calor dos partidos) e, para consulta,
+docs/votacoes-deputadas/votacoes.csv, tabela.md e partidos.md.
 
 Uma candidata entra se é mulher, tem candidatura apta em 2026 e votou em pelo
 menos uma das votações. O cruzamento é pelo nome civil completo (Câmara) igual
@@ -42,6 +43,46 @@ VOTACOES = [
     ("PL da Devastação", "257161-483", "2025-07-16", 57,
      "PL 2159/2021, votação final: Sim = a favor de flexibilizar o licenciamento ambiental", 257161),
 ]
+
+# voto a favor das mulheres e da sociedade em cada votação (posição editorial do site,
+# explicada na seção "Quem vota a favor das mulheres"): Sim nas três primeiras,
+# Não nas que flexibilizam agrotóxicos e licenciamento ambiental.
+FAVORAVEL = {
+    "PEC 6x1": "Sim",
+    "Igualdade Salarial": "Sim",
+    "Misoginia (urgência)": "Sim",
+    "PL do Veneno": "Não",
+    "PL da Devastação": "Não",
+}
+# obstrução é tentar impedir a votação, então conta como voto contra o projeto;
+# abstenção e "Artigo 17" (a presidência da Casa não vota) ficam fora da conta
+CONTA_COMO = {"Sim": "Sim", "Não": "Não", "Obstrução": "Não"}
+# partidos que se fundiram ou mudaram de nome desde a votação -> sigla usada pelo TSE em 2026
+SUCESSOR = {"DEM": "UNIÃO", "PSL": "UNIÃO", "PTB": "PRD", "PATRIOTA": "PRD",
+            "PROS": "SOLIDARIEDADE", "PSC": "PODE", "PCdoB": "PCDOB"}
+
+
+def a_favor(tema, voto):
+    """True/False para voto registrado; None para ausência, abstenção ou quem não era deputada."""
+    v = CONTA_COMO.get(voto)
+    return None if v is None else v == FAVORAVEL[tema]
+
+
+def placar_partidos(votos_partido, partidos_2026):
+    """[{sigla, votos: [[a favor, total], ...] por votação}] dos partidos com candidatas em 2026."""
+    temas = [t for t, *_ in VOTACOES]
+    conta = {}
+    for i, tema in enumerate(temas):
+        for partido, voto in votos_partido[tema]:
+            sigla = SUCESSOR.get(partido, partido)
+            fav = a_favor(tema, voto)
+            if fav is None or sigla not in partidos_2026:
+                continue
+            c = conta.setdefault(sigla, [[0, 0] for _ in temas])
+            c[i][0] += fav
+            c[i][1] += 1
+    total = lambda c: sum(a for a, _ in c) / sum(n for _, n in c)
+    return sorted(({"sigla": s, "votos": c} for s, c in conta.items()), key=lambda p: (-total(p["votos"]), p["sigla"]))
 
 
 def get(caminho):
@@ -96,9 +137,12 @@ def main():
         for d in todas_paginas(f"/deputados?idLegislatura={leg}"):
             legislaturas.setdefault(d["id"], set()).add(leg)
 
-    votos = {}
+    votos, votos_partido = {}, {}
     for tema, vid, _data, _leg, _desc, _prop in VOTACOES:
-        votos[tema] = {v["deputado_"]["id"]: rotulo_voto(v["tipoVoto"]) for v in get(f"/votacoes/{vid}/votos")}
+        brutos = get(f"/votacoes/{vid}/votos")
+        votos[tema] = {v["deputado_"]["id"]: rotulo_voto(v["tipoVoto"]) for v in brutos}
+        # partido da deputada ou do deputado no dia da votação
+        votos_partido[tema] = [(v["deputado_"]["siglaPartido"], rotulo_voto(v["tipoVoto"])) for v in brutos]
     votantes = sorted(set().union(*votos.values()))
     print(f"{len(votantes)} parlamentares votaram em alguma das votações", file=sys.stderr)
 
@@ -166,13 +210,32 @@ def main():
         for l in linhas:
             f.write(f"| {l['nome']} | {l['partido_2026']} | {l['cargo_2026']} | {l['uf_2026']} | "
                     + " | ".join(l[t] for t in temas) + " |\n")
+    partidos_2026 = {l["SG_PARTIDO"] for ls in candidatas.values() for l in ls}
+    partidos = placar_partidos(votos_partido, partidos_2026)
+    sem_deputados = sorted(partidos_2026 - {p["sigla"] for p in partidos})
+    with open(os.path.join(SAIDA, "partidos.md"), "w", encoding="utf-8") as f:
+        f.write("# Quanto cada partido votou a favor das mulheres nas 5 votações\n\n")
+        f.write("Porcentagem dos votos Sim/Não (obstrução conta como Não) das bancadas na Câmara que foram no sentido "
+                "a favor das mulheres e da sociedade: " + "; ".join(f"{t}: {v}" for t, v in FAVORAVEL.items()) + ". "
+                "Partido no dia da votação; partidos que se fundiram entram na sigla atual ("
+                + ", ".join(f"{a} → {b}" for a, b in SUCESSOR.items() if a != "PCdoB") + ").\n\n")
+        f.write("| Partido | " + " | ".join(temas) + " | Total |\n|---|" + "---|" * (len(temas) + 1) + "\n")
+        for p in partidos:
+            cel = [f"{round(100 * a / n)}% ({a}/{n})" if n else "—" for a, n in p["votos"]]
+            a, n = sum(a for a, _ in p["votos"]), sum(n for _, n in p["votos"])
+            f.write(f"| {p['sigla']} | " + " | ".join(cel) + f" | {round(100 * a / n)}% ({a}/{n}) |\n")
+        f.write(f"\nSem deputados nessas votações: {', '.join(sem_deputados)}.\n")
+
     # para o site: votos de cada candidata pelo SQ_CANDIDATO (mesmo id usado em site/dados/{UF}.json)
     site = {
         "fonte": "Câmara dos Deputados, votos nominais do Plenário (dados abertos)",
-        "votacoes": [{"tema": tema, "data": data, "descricao": desc,
+        "votacoes": [{"tema": tema, "data": data, "descricao": desc, "favoravel": FAVORAVEL[tema],
                       "link": f"https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao={prop}",
                       "api": f"https://dadosabertos.camara.leg.br/api/v2/votacoes/{vid}/votos"}
                      for tema, vid, data, _leg, desc, prop in VOTACOES],
+        # votos das bancadas: [a favor, total] em cada votação, do partido mais a favor ao mais contra
+        "partidos": partidos,
+        "sem_deputados": sem_deputados,
         "candidatas": {l["sq"]: {"camara": l["id_camara"], "votos": [l[t] for t in temas]} for l in linhas},
     }
     with open(SITE, "w", encoding="utf-8") as f:

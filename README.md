@@ -9,6 +9,7 @@ Responsável: Thais Freitas (thaisfreitas31@gmail.com)
 ## O que o site faz
 
 - **Monte sua urna com elas:** a pessoa escolhe o estado no mapa e uma mulher em cada cargo que quiser, na ordem da urna (e pode pular os outros): deputada federal, deputada estadual ou distrital, dois votos para o Senado, governadora e presidenta. No fim, recebe uma colinha com os números para levar à votação e enviar pelo WhatsApp.
+- **A favor delas:** o site é suprapartidário, mas não é neutro sobre direitos. Um mapa de calor mostra quanto cada partido votou a favor das mulheres e da sociedade em 5 votações nominais da Câmara (fim da escala 6x1, igualdade salarial, urgência da criminalização da misoginia, PL do Veneno e PL da Devastação), do mais a favor ao mais contra. O card de quem já foi deputada mostra em quantas dessas votações ela votou a favor.
 - **Voto em dobro:** explica a regra da EC 111/2021. Votos em deputadas federais contam em dobro na divisão dos fundos partidário e eleitoral.
 - **Placar:** mostra a presença de mulheres na Câmara, no Senado, nas candidaturas de 2026 e no eleitorado.
 - **Manifesto "Eu voto nelas":** contador de assinaturas. Não é pesquisa de voto e não guarda dados pessoais, só o estado.
@@ -21,7 +22,7 @@ As candidatas vêm dos [dados abertos do TSE](https://dadosabertos.tse.jus.br/da
 
 Entram só mulheres com candidatura apta, ou seja, com o nome na urna e sem renúncia ou indeferimento definitivo. Candidaturas que ainda aguardam julgamento ou recurso também entram, porque os votos nelas são contados. Vices e suplentes ficam de fora.
 
-As candidatas aparecem em ordem sorteada a cada visita, todas no mesmo formato. Cada uma tem um link para a sua página no DivulgaCandContas, do TSE.
+As candidatas aparecem todas no mesmo formato, **em ordem de votação a favor das causas das mulheres**: primeiro as que mais votaram a favor nas 5 votações da Câmara. Quem não tem votos nessas votações entra pela porcentagem da bancada do seu partido; partidos sem deputados nessas votações ficam por último. Só os empates aparecem em ordem sorteada a cada visita. Cada uma tem um link para a sua página no DivulgaCandContas, do TSE.
 
 ## Estrutura
 
@@ -35,7 +36,7 @@ site/                      o que vai para o ar
 scripts/
   tse_para_json.py         converte os arquivos do TSE em site/dados/
   tse_fotos.py             extrai e reduz as fotos oficiais para site/fotos/
-  votacoes_deputadas.py    votos na Câmara das candidatas que já foram deputadas
+  votacoes_deputadas.py    votos na Câmara das candidatas que já foram deputadas e das bancadas de cada partido
   og.html, gerar_og.sh     fonte da og.png e script que gera a imagem
 src/worker.js              Worker: serve site/ e a API do manifesto
 migrations/                tabelas do manifesto no D1
@@ -75,7 +76,14 @@ A situação das candidaturas muda até a véspera da eleição, então vale rep
    ```
 
    O script pega só as fotos das candidatas do site, reduz cada uma (sem cortar nem retocar) para `site/fotos/`, marca em `site/dados/` quem tem foto e mostra quantas candidatas de cada cargo têm foto. Usa o `sips`, que vem no macOS.
-5. Faça o commit de `site/dados/` e `site/fotos/` e publique.
+5. Para os votos na Câmara (card das candidatas e mapa de calor dos partidos), rode:
+
+   ```bash
+   python3 scripts/votacoes_deputadas.py dados-tse/consulta_cand_2026.zip --complementar dados-tse/consulta_cand_complementar_2026.zip
+   ```
+
+   O sentido "a favor das mulheres" de cada votação fica em `FAVORAVEL`, no começo do script. A conta dos partidos usa o partido de cada parlamentar no dia da votação (partidos que se fundiram entram na sigla de hoje, em `SUCESSOR`), conta obstrução como voto contra o projeto e deixa ausências e abstenções de fora. A tabela para conferência fica em `docs/votacoes-deputadas/partidos.md`.
+6. Faça o commit de `site/dados/` e `site/fotos/` e publique.
 
 Para conferir os números sem o arquivo complementar, use `--sem-situacao --saida /tmp/previa`. Esse resultado inclui candidaturas inaptas e não deve ser publicado.
 
@@ -96,7 +104,7 @@ A `site/og.png` é a imagem que aparece quando o link é enviado no WhatsApp. Pa
 
 - Site de pessoa física (Lei 9.504, art. 57-C §1), com responsável identificada (art. 57-D).
 - Sem impulsionamento pago, sem disparo em massa, sem enquetes.
-- Todas as candidatas aptas, em ordem sorteada e no mesmo formato.
+- Todas as candidatas aptas, no mesmo formato, em ordem de votação a favor das causas das mulheres na Câmara (os votos dela ou, se não tiver, os da bancada do partido; empates em ordem sorteada).
 - No dia da eleição (4/10, 0h–17h de Brasília), o envio pelo WhatsApp e novas assinaturas ficam pausados.
 
 ## Créditos

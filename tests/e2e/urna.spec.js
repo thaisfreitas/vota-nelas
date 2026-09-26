@@ -237,14 +237,60 @@ test("card de quem já foi deputada mostra como ela votou na Câmara", async ({ 
   await votos.locator("summary").click();
   await expect(votos.locator("li")).toHaveCount(5);
   await expect(votos.locator("li").first()).toBeVisible();
-  await expect(votos).toContainText("PEC 6x1 (27/05/2026): Votou Sim");
+  await expect(votos).toContainText("PEC 6x1 (27/05/2026): Votou Sim ✓ a favor");
+  // o placar aparece mesmo com o bloco fechado
+  await expect(votos.locator("summary .pl")).toHaveText(/^a favor das mulheres em \d de \d$/);
   await expect(votos.locator("a", { hasText: "Página dela na Câmara" })).toHaveAttribute("href", /camara\.leg\.br\/deputados\/\d+$/);
+});
+
+test("mapa de calor mostra quanto cada partido votou a favor das mulheres", async ({ page }) => {
+  await page.goto("/#causas");
+  const secao = page.locator("#causas");
+  await expect(secao).toContainText("não é neutro sobre direitos");
+  // o sentido de cada votação fica explícito
+  await expect(secao.locator(".causas li")).toHaveCount(5);
+  await expect(secao.locator(".causas li", { hasText: "PL do Veneno" })).toContainText("A favor = Não");
+  const tabela = secao.locator("table.hm");
+  await expect(tabela).toBeVisible();
+  await expect(tabela.locator("thead th[scope=col]")).toHaveCount(7);
+  const linhas = tabela.locator("tbody tr");
+  expect(await linhas.count()).toBeGreaterThan(10);
+  // do mais a favor ao mais contra, pelo total
+  const totais = (await tabela.locator("tbody td.tot").allTextContents()).map((t) => parseInt(t, 10));
+  expect(totais).toEqual([...totais].sort((a, b) => b - a));
+  // detalhe da célula ao passar o mouse ou focar
+  await tabela.locator("tbody td.tot").first().focus();
+  await expect(page.locator("#hm-tip")).toBeVisible();
+  await expect(page.locator("#hm-tip")).toContainText(/votos a favor/);
+  await expect(secao.locator('a[href="#urna"]')).toBeVisible();
+});
+
+test("candidatas aparecem de quem mais votou a favor das mulheres para quem menos votou", async ({ page }) => {
+  await escolherEstado(page, "SP");
+  await expect(page.locator("#count-lbl")).toContainText("em ordem de votação a favor das mulheres");
+  // quem tem votos na Câmara vem antes da bancada com a mesma porcentagem
+  await expect(page.locator(".cand-wrap").first().locator("details.votos")).toHaveCount(1);
+  // porcentagem a favor de cada card, em ordem: votos dela ou, sem votos dela, os da bancada do partido
+  const pcts = [];
+  for (let pagina = 0; pagina < 20; pagina++) {
+    for (const pl of await page.locator(".cand-wrap .pl").allTextContents()) {
+      const dela = pl.match(/em (\d+) de (\d+)/);
+      pcts.push(dela ? Math.round((100 * Number(dela[1])) / Number(dela[2])) : parseInt(pl, 10));
+    }
+    await page.locator("#more").click();
+  }
+  expect(pcts.length).toBeGreaterThan(100);
+  expect(pcts).toEqual([...pcts].sort((a, b) => b - a));
 });
 
 test("candidata que nunca foi deputada não tem o bloco de votos", async ({ page }) => {
   await escolherEstado(page, "SP");
+  // as que já foram deputadas vêm primeiro: avança até aparecer uma que nunca foi
   const semVotos = page.locator(".cand-wrap:not(:has(details.votos))");
+  for (let i = 0; i < 20 && !(await semVotos.count()); i++) await page.locator("#more").click();
   await expect(semVotos.first()).toBeVisible();
+  // no lugar dos votos dela, o card mostra a bancada do partido
+  await expect(semVotos.first().locator(".alin")).toContainText("Sem votos dela nessas votações");
 });
 
 test("guia de como pesquisar uma candidata, com fontes oficiais e avaliações externas identificadas", async ({ page }) => {
@@ -270,7 +316,7 @@ test("candidata com foto oficial mostra a foto; sem foto, as iniciais", async ({
   });
   await page.route("**/fotos/*.jpg", (r) => r.fulfill({ path: "site/og.png", contentType: "image/png" }));
   await escolherEstado(page, "AC");
-  // a lista é sorteada e mostra 6 por vez: busca cada uma pelo nome
+  // a lista mostra 6 por vez: busca cada uma pelo nome
   await page.locator("#q").fill(comFoto);
   const card = page.locator(".cand", { hasText: comFoto }).first();
   await expect(card.locator(".avatar img")).toHaveAttribute("src", /^fotos\/\d+\.jpg$/);
