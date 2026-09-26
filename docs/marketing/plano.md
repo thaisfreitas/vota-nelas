@@ -21,6 +21,7 @@ De 25/09 (lançamento) a 03/10/2026 (véspera da eleição). Em 04/10 não há p
 Estas regras protegem você e o site. Elas estão na seção "Regras que este site segue" e na legislação eleitoral.
 
 - **Suprapartidário sempre:** não citar, marcar nem mostrar nenhuma candidata, candidato ou partido nas suas publicações. O convite é para votar em mulheres, não em alguém.
+- **Suprapartidário, não neutro:** o site defende as causas das mulheres e da sociedade. As candidatas aparecem em ordem de votação a favor dessas causas na Câmara (os votos dela ou, se não tiver, os da bancada do partido). Nas publicações, falar das causas e de como a ordem funciona, sem nomear pessoas ou partidos: quem quiser ver os partidos encontra o mapa de calor no site.
 - **Sem impulsionamento pago:** pessoa física não pode pagar para impulsionar conteúdo eleitoral. Nada de "Promover" no Instagram nem anúncios.
 - **Sem disparo em massa:** compartilhar com seus contatos e grupos pode. Listas compradas, robôs ou envio automático, não.
 - **Sem enquetes:** não usar enquete, "caixinha de votação" ou pergunta sobre intenção de voto nos stories.
@@ -49,7 +50,7 @@ Hashtags: `#VotaNelas` `#EuVotoNelas` `#MaisMulheresNaPolítica` `#Eleições202
 | **Seg 28/09** | Voto em dobro | `feed_03_voto-em-dobro` · X: fio do voto em dobro | `story_contagem_06` + `story_03_voto-em-dobro` | Início das mensagens para parceiras |
 | **Ter 29/09** | Conheça a candidata | `feed_05_conheca-a-candidata` · X: `x_03_conheca-a-candidata` | `story_contagem_05` + `story_04_conheca-a-candidata` | — |
 | **Qua 30/09** | Manifesto | Print do contador do manifesto nos stories · X: `x_02_como-funciona` | `story_contagem_04` + `story_02_manifesto` | Grupos de trabalho, faculdade, bairro |
-| **Qui 01/10** | Reforço dos números | Repost de `feed_01_52-e-17` · X: dado do Senado | `story_contagem_03` | — |
+| **Qui 01/10** | A favor das mulheres | Carrossel `feed_06_a-favor-1` e `-2` · X: `x_04_a-favor-das-mulheres` | `story_contagem_03` + `story_05_a-favor-das-mulheres` | Mensagem "a favor das mulheres" nos grupos |
 | **Sex 02/10** | Passe para 3 amigas | Post pedindo para mandar a colinha · X: pedido de RT | `story_contagem_02` | Onda 2: todos os grupos |
 | **Sáb 03/10** | Véspera | Repost de `feed_04_colinha` · X: lembrete da colinha | `story_contagem_01` (escuro) | Lembrete final: "leve a colinha amanhã" |
 | **Dom 04/10** | Eleição | **Nada novo.** | **Nada novo.** | **Nada novo.** |
@@ -63,7 +64,7 @@ Hashtags: `#VotaNelas` `#EuVotoNelas` `#MaisMulheresNaPolítica` `#Eleições202
 >
 > Criei o Vota Nelas: você escolhe seu estado e uma mulher em cada cargo que quiser, na ordem da urna (onde não houver uma candidata que te represente, é só pular), e recebe uma colinha pronta para levar no dia 4 e mandar para as amigas.
 >
-> Aparecem todas as candidatas aptas, de todos os partidos, com os dados oficiais do TSE e em ordem sorteada. Quem escolhe é você.
+> Aparecem todas as candidatas aptas, de todos os partidos, com os dados oficiais do TSE, em ordem de votação a favor das causas das mulheres. Quem escolhe é você.
 >
 > Leva 3 minutos: link na bio 💜
 > #VotaNelas #EuVotoNelas #MaisMulheresNaPolítica #Eleições2026
@@ -91,6 +92,15 @@ Hashtags: `#VotaNelas` `#EuVotoNelas` `#MaisMulheresNaPolítica` `#Eleições202
 >
 > Dados oficiais do TSE e da Câmara. O site não recomenda ninguém: quem escolhe é você. Link na bio.
 
+**01/10, a favor das mulheres** (carrossel `feed_06_a-favor-1` e `-2`)
+> Mais mulheres, sim. E que votem a favor das mulheres.
+>
+> O Vota Nelas é suprapartidário, mas não é neutro sobre direitos. Eleger mais mulheres só muda a nossa vida quando elas votam a favor das mulheres, das minorias e da sociedade.
+>
+> Por isso, no site, as candidatas aparecem em ordem de votação a favor de 5 causas na Câmara: fim da escala 6x1, igualdade salarial e criminalização da misoginia (a favor = Sim), PL do Veneno e PL da Devastação (a favor = Não). Quem já foi deputada entra pelos votos dela; quem não tem votos lá, pela bancada do partido. Todas aparecem, no mesmo formato.
+>
+> Votos oficiais da Câmara. Quem escolhe é você. Link na bio.
+
 **02/10, passe para 3 amigas**
 > Faltam 2 dias. Já montou sua urna? Agora manda a colinha para 3 amigas: cada colinha compartilhada pode virar mais votos em mulheres.
 
@@ -101,7 +111,7 @@ Hashtags: `#VotaNelas` `#EuVotoNelas` `#MaisMulheresNaPolítica` `#Eleições202
 >
 > 2/ Escolhe o estado e uma mulher nos cargos que quiser, na ordem da urna, e recebe uma colinha para levar no dia 4.
 >
-> 3/ É suprapartidário: aparecem todas as candidatas aptas, de todos os partidos, com dados oficiais do TSE e em ordem sorteada.
+> 3/ É suprapartidário, mas não neutro: aparecem todas as candidatas aptas, de todos os partidos, com dados oficiais do TSE, em ordem de votação a favor das causas das mulheres na Câmara.
 >
 > 4/ Se puder, manda para 3 amigas. #VotaNelas
 
@@ -111,7 +121,10 @@ Hashtags: `#VotaNelas` `#EuVotoNelas` `#MaisMulheresNaPolítica` `#Eleições202
 **29/09, conheça a candidata**
 > Antes de votar, conheça a candidata: no votanelas.com.br tem o link oficial do TSE (bens, certidões, contas) e, para quem já foi deputada, como ela votou na Câmara. Dados oficiais; quem escolhe é você. #VotaNelas
 
-**01/10, Senado**
+**01/10, a favor das mulheres** (`x_04_a-favor-das-mulheres`)
+> Mais mulheres, sim. E que votem a favor das mulheres. No votanelas.com.br as candidatas aparecem em ordem de votação a favor de 5 causas na Câmara: escala 6x1, igualdade salarial, misoginia, agrotóxicos e licenciamento ambiental. #VotaNelas
+
+**01/10, Senado** (se sobrar tempo)
 > No Senado, são 15 senadoras em 81 cadeiras (18,5%). Neste ano cada eleitor vota em 2 nomes para o Senado. votanelas.com.br
 
 **03/10, véspera**
@@ -127,6 +140,9 @@ Hashtags: `#VotaNelas` `#EuVotoNelas` `#MaisMulheresNaPolítica` `#Eleições202
 **Onda 2, 02/10, todos os grupos**
 > Faltam 2 dias para a eleição! Se você quer votar em mais mulheres, monte sua urna em 3 minutos e leve a colinha no domingo: votanelas.com.br
 > Mulheres são 52,8% do eleitorado e só 17,2% da Câmara. Passa para 3 amigas?
+
+**A favor das mulheres, 01/10**
+> Sabia que no Vota Nelas as candidatas aparecem em ordem de votação a favor das causas das mulheres? Primeiro quem mais votou na Câmara pelo fim da escala 6x1, pela igualdade salarial e contra mais agrotóxicos, por exemplo. Dá uma olhada antes de escolher: votanelas.com.br
 
 **Lembrete final, 03/10**
 > Amanhã é dia 4! O celular não entra na cabine: anota ou tira print da sua colinha hoje. Ainda não montou? votanelas.com.br
@@ -145,7 +161,7 @@ Pedir para movimentos, coletivos e perfis de mulheres compartilharem. O argument
 
 **Mensagem para movimentos e coletivos (DM ou e-mail):**
 > Oi! Sou a Thais Freitas e criei o Vota Nelas (votanelas.com.br), um site suprapartidário em que a pessoa monta a urna com mais mulheres, cargo por cargo, e recebe uma colinha para levar no dia 4.
-> Aparecem todas as candidatas aptas, de todos os partidos, com dados oficiais do TSE e em ordem sorteada; o site não pede nenhum dado pessoal.
+> Aparecem todas as candidatas aptas, de todos os partidos, com dados oficiais do TSE, em ordem de votação a favor das causas das mulheres na Câmara; o site não pede nenhum dado pessoal.
 > Vocês topariam compartilhar com a comunidade de vocês? Posso mandar artes prontas para feed e stories. Obrigada!
 
 **Mensagem para perfis de conteúdo:**
@@ -170,11 +186,14 @@ Pedir para movimentos, coletivos e perfis de mulheres compartilharem. O argument
 | `feed_03_voto-em-dobro.png` | 1080x1350 | Feed: voto em dobro (escuro) |
 | `feed_04_colinha.png` | 1080x1350 | Feed: colinha em papel |
 | `feed_05_conheca-a-candidata.png` | 1080x1350 | Feed: conheça a candidata (escuro) |
+| `feed_06_a-favor-1/2.png` | 1080x1350 | Feed: carrossel "a favor das mulheres" (1: as 5 causas; 2: como a lista é ordenada, escuro) |
 | `story_01_convite.png` | 1080x1920 | Stories e status: convite |
 | `story_02_manifesto.png` | 1080x1920 | Stories e status: manifesto (escuro) |
 | `story_03_voto-em-dobro.png` | 1080x1920 | Stories e status: voto em dobro |
 | `story_04_conheca-a-candidata.png` | 1080x1920 | Stories e status: conheça a candidata (escuro) |
+| `story_05_a-favor-das-mulheres.png` | 1080x1920 | Stories e status: as 5 causas e a ordem das candidatas |
 | `story_contagem_08.png` a `_01.png` | 1080x1920 | Contagem regressiva, 26/09 a 03/10 (dias ímpares lembram de conhecer a candidata) |
 | `x_01_52-e-17.png` | 1600x900 | X: números |
 | `x_02_como-funciona.png` | 1600x900 | X: como funciona (escuro) |
 | `x_03_conheca-a-candidata.png` | 1600x900 | X: conheça a candidata |
+| `x_04_a-favor-das-mulheres.png` | 1600x900 | X: as 5 causas e a ordem das candidatas |

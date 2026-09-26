@@ -22,7 +22,7 @@ FONTES = ('<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family
           '&family=Figtree:wght@500;600;700&family=Share+Tech+Mono&display=swap">')
 
 CSS = """
-:root{--bg:#FBF7FA;--soft:#F4EAF2;--ink:#2B1330;--muted:#6E5A70;--vinho:#A3123F;--roxo:#5B2A86;--men:#CDBFCB;
+:root{--verde:#1F7A4D;--bg:#FBF7FA;--soft:#F4EAF2;--ink:#2B1330;--muted:#6E5A70;--vinho:#A3123F;--roxo:#5B2A86;--men:#CDBFCB;
   --display:"Bricolage Grotesque",sans-serif;--body:"Figtree",sans-serif;--mono:"Share Tech Mono",monospace}
 .escuro{--bg:#1A0F1C;--soft:#2E1C31;--ink:#F6ECF4;--muted:#BFA9BE;--vinho:#F0527F;--roxo:#C39BEA;--men:#56435A}
 *{box-sizing:border-box;margin:0}
@@ -50,6 +50,9 @@ p{line-height:1.3}
 .colinha .d{display:flex;gap:6px}
 .colinha .d i{width:30px;height:42px;border:2px solid #1B2A17;border-radius:4px;display:grid;place-items:center;font-style:normal;font-family:var(--mono);font-size:28px}
 .passo{display:flex;gap:28px;align-items:flex-start}
+.chip{display:inline-block;background:var(--verde);color:#fff;font-weight:700;border-radius:999px;padding:.12em .7em;white-space:nowrap}
+.escala{display:flex;gap:6px}
+.escala i{flex:1;height:26px;border-radius:6px}
 .passo .n{flex:none;width:92px;height:92px;border-radius:50%;background:var(--vinho);color:var(--bg);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:52px}
 """
 
@@ -96,6 +99,40 @@ def lista_conheca(tam_titulo, tam_texto, gap):
         f'<p class="m" style="font-size:{tam_texto}px;margin-top:8px">{d}</p></div></div>' for t, d in CONHECA) + "</div>"
 
 
+# as 5 votações da Câmara e o voto a favor das mulheres em cada uma (mesma regra do site)
+CAUSAS = [
+    ("Fim da escala 6x1", "Mais tempo de descanso para quem soma emprego e cuidado da casa.", "Sim"),
+    ("Igualdade salarial", "Mesmo salário para mulheres e homens no mesmo trabalho.", "Sim"),
+    ("Criminalizar a misoginia", "Urgência para punir o ódio contra as mulheres.", "Sim"),
+    ("PL do Veneno", "Mais agrotóxicos na comida, com menos controle.", "Não"),
+    ("PL da Devastação", "Menos fiscalização ambiental para grandes obras.", "Não"),
+]
+# escala do mapa de calor do site, de contra (vermelho) a favor (verde)
+ESCALA = ('<div class="escala">' + "".join(f'<i style="background:{c}"></i>' for c in
+          ("#B42318", "#F6C3B8", "#ECE4EA", "#B5DEC4", "#1F7A4D")) + "</div>")
+
+
+def lista_causas(tam_titulo, tam_texto, gap, com_texto=True):
+    return f'<div style="display:grid;gap:{gap}px">' + "".join(
+        f'<div style="display:flex;justify-content:space-between;align-items:center;gap:24px;border-bottom:2px solid var(--soft);padding-bottom:{gap // 2}px">'
+        f'<div><h1 style="font-size:{tam_titulo}px">{t}</h1>'
+        + (f'<p class="m" style="font-size:{tam_texto}px;margin-top:6px">{d}</p>' if com_texto else "")
+        + f'</div><span class="chip" style="font-size:{tam_texto}px">A favor = {v}</span></div>' for t, d, v in CAUSAS) + "</div>"
+
+
+ORDEM = [
+    ("Os votos dela na Câmara", "Quem já foi deputada entra pelas vezes que votou a favor das mulheres."),
+    ("Se não tem, os do partido", "Quem nunca votou nessas 5 entra pela bancada do partido na Câmara."),
+    ("Todas aparecem", "Todas as candidatas aptas, no mesmo formato. Só os empates são sorteados."),
+]
+
+
+def lista_ordem(tam_titulo, tam_texto, gap):
+    return f'<div style="display:grid;gap:{gap}px">' + "".join(
+        f'<div class="passo"><div class="n">{i}</div><div><h1 style="font-size:{tam_titulo}px">{t}</h1>'
+        f'<p class="m" style="font-size:{tam_texto}px;margin-top:8px">{d}</p></div></div>' for i, (t, d) in enumerate(ORDEM, 1)) + "</div>"
+
+
 LINHAS_URNA = [("Deputada federal", 4), ("Deputada estadual", 5), ("Senadora 1", 3), ("Senadora 2", 3),
                ("Governadora", 2), ("Presidenta", 2)]
 
@@ -134,7 +171,7 @@ ARTES = {
     "feed_02_carrossel-4": (FEED, "", f"""{LOGO}
       <div class="meio">
         <h1 style="font-size:72px;margin-bottom:40px">Todas as candidatas aptas, de <span class="v">todos os partidos.</span></h1>
-        <p style="font-size:36px;font-weight:600">Dados oficiais do TSE, em ordem sorteada a cada visita e no mesmo formato.</p>
+        <p style="font-size:36px;font-weight:600">Dados oficiais do TSE e da Câmara, no mesmo formato, em ordem de votação a favor das causas das mulheres.</p>
         <p class="m" style="font-size:32px;margin-top:30px">Sem recomendar ninguém: quem escolhe é você.</p>
         <div style="margin-top:60px"><span class="cta" style="font-size:44px">votanelas.com.br</span></div>
       </div>{RODAPE}"""),
@@ -223,6 +260,40 @@ ARTES = {
         {lista_conheca(44, 26, 26)}
       </div>{RODAPE}"""),
 }
+
+# ---------- a favor das mulheres: o sentido das 5 votações e a ordem das candidatas ----------
+ARTES["feed_06_a-favor-1"] = (FEED, "", f"""{LOGO}
+      <div class="meio">
+        <h1 style="font-size:72px">Mais mulheres, sim.</h1>
+        <h1 class="v" style="font-size:72px;margin:6px 0 24px">E que votem a favor das mulheres.</h1>
+        <p class="m" style="font-size:30px;margin-bottom:30px">Suprapartidário, não neutro sobre direitos. Estas 5 votações da Câmara mexem com a nossa vida:</p>
+        {lista_causas(40, 25, 20)}
+      </div>{RODAPE}""")
+ARTES["feed_06_a-favor-2"] = (FEED, "escuro", f"""{LOGO}
+      <div class="meio">
+        <p class="v" style="font-size:30px;font-weight:700;letter-spacing:.12em">COMO A LISTA É ORDENADA</p>
+        <h1 style="font-size:78px;margin:16px 0 46px">As candidatas aparecem em ordem de <span class="v">votação a favor das mulheres.</span></h1>
+        {lista_ordem(48, 30, 40)}
+        <div style="margin-top:50px">{ESCALA}<div style="display:flex;justify-content:space-between;font-size:26px;font-weight:700;margin-top:10px"><span>Contra</span><span>A favor</span></div></div>
+        <p class="m" style="font-size:24px;margin-top:30px">Votos nominais do Plenário da Câmara dos Deputados (dados abertos). Quem escolhe é você.</p>
+      </div>{RODAPE}""")
+ARTES["story_05_a-favor-das-mulheres"] = (STORY, "", f"""{LOGO}
+      <div class="meio">
+        <h1 style="font-size:88px">Mais mulheres, sim.</h1>
+        <h1 class="v" style="font-size:88px;margin:8px 0 40px">E que votem a favor das mulheres.</h1>
+        {lista_causas(46, 28, 20)}
+        <p style="font-size:36px;font-weight:600;margin-top:36px">No site, as candidatas aparecem em ordem de votação a favor dessas causas.</p>
+      </div>
+      {CTA_STORY}
+      {RODAPE_STORY}""")
+ARTES["x_04_a-favor-das-mulheres"] = (X, "", f"""{LOGO}
+      <div class="meio" style="flex-direction:row;align-items:center;gap:70px">
+        <div style="flex:0 0 600px">
+          <h1 style="font-size:78px">Mais mulheres, sim. <span class="v">E que votem a favor das mulheres.</span></h1>
+          <p class="m" style="font-size:28px;margin-top:26px">No site, as candidatas aparecem em ordem de votação a favor destas causas na Câmara.</p>
+        </div>
+        <div style="flex:1">{lista_causas(38, 22, 16, com_texto=False)}</div>
+      </div>{RODAPE}""")
 
 # ---------- fotos de perfil (1080x1080) ----------
 ARTES["perfil_01_marca"] = (PERFIL, "", f"""<div style="flex:1;display:grid;place-items:center;background:var(--vinho)">
