@@ -56,6 +56,13 @@ p{line-height:1.3}
 FEED = dict(w=1080, h=1350, pad="84px", logo="44px", rod="26px", gap="12px")
 STORY = dict(w=1080, h=1920, pad="250px 90px 250px", logo="50px", rod="28px", gap="14px")
 X = dict(w=1600, h=900, pad="70px 90px", logo="40px", rod="26px", gap="10px")
+# foto de perfil (Instagram e X): as redes recortam em círculo, então tudo fica no centro
+PERFIL = dict(w=1080, h=1080, pad="0", logo="0", rod="0", gap="0")
+
+# o mesmo sinal do favicon do site (círculo com o visto)
+VISTO = ('<svg viewBox="0 0 64 64" style="width:{t}px;height:{t}px;display:block">'
+         '<circle cx="32" cy="32" r="30" fill="{fundo}"/>'
+         '<path d="M19 33l9 9 18-20" fill="none" stroke="{traco}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>')
 
 LOGO = '<div class="logo"><i>✓</i>Vota <em>Nelas</em></div>'
 RODAPE = ('<div class="rodape"><span>Iniciativa pessoal e suprapartidária</span>'
@@ -216,6 +223,14 @@ ARTES = {
         {lista_conheca(44, 26, 26)}
       </div>{RODAPE}"""),
 }
+
+# ---------- fotos de perfil (1080x1080) ----------
+ARTES["perfil_01_marca"] = (PERFIL, "", f"""<div style="flex:1;display:grid;place-items:center;background:var(--vinho)">
+      {VISTO.format(t=1060, fundo="#A3123F", traco="#FFFFFF")}</div>""")
+ARTES["perfil_02_marca-e-nome"] = (PERFIL, "", f"""<div style="flex:1;display:grid;place-items:center;align-content:center;gap:34px">
+      {VISTO.format(t=380, fundo="#A3123F", traco="#FFFFFF")}
+      <div style="font-family:var(--display);font-weight:800;font-size:124px;letter-spacing:-.02em;line-height:1">Vota <span class="v">Nelas</span></div>
+    </div>""")
 
 # contagem regressiva para os stories: 26/9 (faltam 8 dias) até 3/10 (amanhã)
 for faltam in range(8, 0, -1):
